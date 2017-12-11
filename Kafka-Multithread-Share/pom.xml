@@ -19,6 +19,10 @@
     </properties>
 
     <dependencies>
+        <!--
+            project is in https://github.com/huangjianqin/BigData/tree/master/Kin-Framework
+            please download the source and make jar by yourself
+        -->
         <dependency>
             <groupId>org.kin</groupId>
             <artifactId>kin-framework</artifactId>
