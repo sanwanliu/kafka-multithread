@@ -40,14 +40,11 @@ public class MultiThreadConsumerManager implements ReConfigable{
     }
 
     static {
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for(ApplicationContext applicationContext: appName2ApplicationContext.values()){
-                    applicationContext.close();
-                }
-                appName2ApplicationContext.clear();
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            for(ApplicationContext applicationContext: appName2ApplicationContext.values()){
+                applicationContext.close();
             }
+            appName2ApplicationContext.clear();
         }));
     }
 
@@ -138,7 +135,7 @@ public class MultiThreadConsumerManager implements ReConfigable{
                 config.getProperty(AppConfig.MESSAGEHANDLERMANAGER_MODEL)
         );
 
-        Application application = null;
+        Application application;
         switch (msgHandlerModel){
             case OPOT:
             case OPMT:
@@ -199,7 +196,6 @@ public class MultiThreadConsumerManager implements ReConfigable{
 
     /**
      * 非线程安全
-     * @param newConfig
      */
     @Override
     public void reConfig(Properties newConfig) {

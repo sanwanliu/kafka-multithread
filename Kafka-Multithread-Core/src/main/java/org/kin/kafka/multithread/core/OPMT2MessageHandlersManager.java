@@ -118,8 +118,8 @@ public class OPMT2MessageHandlersManager extends AbstractMessageHandlersManager 
         }
 
         TopicPartition topicPartition = consumerRecordInfo.topicPartition();
-        List<OPMT2MessageQueueHandlerThread> threads = null;
-        OPMT2MessageQueueHandlerThread selectedThread = null;
+        List<OPMT2MessageQueueHandlerThread> threads;
+        OPMT2MessageQueueHandlerThread selectedThread;
         PendingWindow pendingWindow = topicPartition2PendingWindow.get(topicPartition);
         if(topicPartition2Threads.containsKey(topicPartition)){
             //已有该topic分区对应的线程池启动

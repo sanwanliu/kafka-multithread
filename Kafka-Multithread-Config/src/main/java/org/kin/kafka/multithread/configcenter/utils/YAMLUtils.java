@@ -14,8 +14,6 @@ import java.util.Properties;
 public class YAMLUtils {
     /**
      * 多层嵌套map
-     * @param configPath
-     * @return
      */
     public static Map<String, Object> loadYML(String configPath){
         try {
@@ -41,9 +39,6 @@ public class YAMLUtils {
 
     /**
      * 将多层嵌套map转换成A.B.C的properties格式
-     * @param yaml
-     * @param properties
-     * @param keyHead
      */
     private static void transfer2Properties(Map<String, Object> yaml, Properties properties, String keyHead){
         for(String key: yaml.keySet()){
@@ -65,8 +60,6 @@ public class YAMLUtils {
 
     /**
      * 将多层嵌套map转换成A.B.C的properties的map格式
-     * @param yaml
-     * @param map
      */
     private static void transfer2Map(Map<String, Object> yaml, Map<String, String> map, String keyHead){
         for(String key: yaml.keySet()){
@@ -93,8 +86,6 @@ public class YAMLUtils {
 
     /**
      * 将配置转换为Yaml字符串
-     * @param yaml
-     * @return
      */
     public static String transfer2YamlStr(Map<String, Object> yaml){
         return Yaml.dump(yaml);
@@ -106,10 +97,8 @@ public class YAMLUtils {
 
     /**
      * 将A.B.C的properties的map格式转换多层嵌套map
-     * @param yaml
-     * @param properties
      */
-    private static void transfer2Yaml(Map<String, Object> yaml, Map<String, String> config){
+    private static void transfer2Yaml(Map<String, Object> yaml, Map config){
         for(Object key: config.keySet()){
             String keyStr = (String) key;
             if(keyStr.contains("\\.")){
@@ -135,9 +124,7 @@ public class YAMLUtils {
     /**
      * 不断递归创建多层嵌套map
      * 尾递归,提交性能
-     * @param nowLevel
      * @param key 下面层数的key+.组成
-     * @param value
      */
     private static void deepMap(Map<String, Object> nowLevel, String key, Object value){
         if(key.contains("\\.")){
@@ -149,28 +136,6 @@ public class YAMLUtils {
             deepMap(nextLevel, split[1], value);
         }else{
             nowLevel.put(key, value);
-        }
-    }
-
-    /**
-     * 将A.B.C的properties格式转换多层嵌套map
-     * @param yaml
-     * @param properties
-     */
-    private static void transfer2Yaml(Map<String, Object> yaml, Properties config){
-        for(Object key: config.keySet()){
-            String keyStr = (String) key;
-            if(keyStr.contains("\\.")){
-                String[] split = keyStr.split("\\.", 2);
-                Map<String, Object> nextLevel = yaml.containsKey(split[0])? (Map<String, Object>) yaml.get(split[0]) : new HashMap<>();
-                if(!yaml.containsKey(split[0])){
-                    yaml.put(split[0], nextLevel);
-                }
-                deepMap(nextLevel, split[1], config.get(key));
-            }
-            else {
-                yaml.put(key.toString(), config.get(key));
-            }
         }
     }
 

@@ -24,7 +24,7 @@ public class ConfigCenterConfigUtils {
 
         Properties clonedProperties = new Properties();
         for(Map.Entry<Object, Object> entry: config.entrySet()){
-            clonedProperties.put(new String(entry.getKey().toString()), new String(entry.getValue().toString()));
+            clonedProperties.put(entry.getKey().toString(), entry.getValue().toString());
         }
         return clonedProperties;
     }
@@ -34,21 +34,16 @@ public class ConfigCenterConfigUtils {
             throw new IllegalStateException("last properties or new properties state wrong");
         }
 
-        if(lastConfig == null && newConfig != null){
+        if(lastConfig == null){
             return true;
         }
 
-        if(lastConfig != null && newConfig == null){
+        if(newConfig == null){
             return false;
         }
 
-        if(lastConfig.containsKey(key) && newConfig.containsKey(key)){
-            if(!lastConfig.get(key).equals(newConfig.get(key))){
-                return true;
-            }
-            else{
-                return false;
-            }
+        if(lastConfig.containsKey(key)){
+            return isConfigItemChange(lastConfig.get(key), newConfig, key);
         }
         else{
             throw new IllegalStateException("last properties or new properties state wrong");
@@ -103,7 +98,7 @@ public class ConfigCenterConfigUtils {
     public static String toString(Properties config){
         StringBuilder sb = new StringBuilder();
         for(Map.Entry<Object, Object> entry: config.entrySet()){
-            sb.append(entry.getKey() + "  =  " + entry.getValue() + System.lineSeparator());
+            sb.append(entry.getKey()).append("  =  ").append(entry.getValue()).append(System.lineSeparator());
         }
         return sb.toString();
     }

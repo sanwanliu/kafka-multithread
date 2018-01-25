@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.ToDoubleBiFunction;
+import java.util.function.ToDoubleFunction;
 
 /**
  * Created by huangjianqin on 2017/9/19.
@@ -119,7 +121,6 @@ public class LocalContainerAllocator implements ContainerAllocator {
 
     /**
      * RPC通知空闲container关闭
-     * @param idleContainers
      */
     private void askIdleContainer2Close(Set<Long> idleContainers) {
         if(idleContainers == null){
@@ -148,7 +149,7 @@ public class LocalContainerAllocator implements ContainerAllocator {
             }
 
             try {
-                healthReportView.add((HealthReport) healthReport.clone());
+                healthReportView.add(healthReport.clone());
             } catch (CloneNotSupportedException e) {
                 e.printStackTrace();
             }
@@ -171,40 +172,19 @@ public class LocalContainerAllocator implements ContainerAllocator {
         Map<Long, Double> rates = new HashMap<>();
 
         //统计可用CPU排名
-        healthReportView.sort(new Comparator<HealthReport>() {
-            @Override
-            public int compare(HealthReport o1, HealthReport o2) {
-                return Integer.compare(o1.getAvailableProcessors(), o2.getAvailableProcessors());
-            }
-        });
+        healthReportView.sort(Comparator.comparingInt(HealthReport::getAvailableProcessors));
         addRate(rates, healthReportView);
 
         //统计堆内存空闲比例排名
-        healthReportView.sort(new Comparator<HealthReport>() {
-            @Override
-            public int compare(HealthReport o1, HealthReport o2) {
-                return Double.compare(1.0 * o1.getFreeMemory() / o1.getTotalMemory(), 1.0 * o2.getFreeMemory() / o2.getTotalMemory());
-            }
-        });
+        healthReportView.sort(Comparator.comparingDouble((o) -> 1.0 * o.getFreeMemory() / o.getTotalMemory()));
         addRate(rates, healthReportView);
 
         //统计总堆内存排名
-        healthReportView.sort(new Comparator<HealthReport>() {
-            @Override
-            public int compare(HealthReport o1, HealthReport o2) {
-                return Double.compare(o1.getTotalMemory(), o2.getTotalMemory());
-            }
-        });
+        healthReportView.sort(Comparator.comparingDouble(HealthReport::getTotalMemory));
         addRate(rates, healthReportView);
 
         //统计Container选中次数排名,倒序,启动app越多,越值得信任,越优先选择
-        healthReportView.sort(new Comparator<HealthReport>() {
-            @Override
-            public int compare(HealthReport o1, HealthReport o2) {
-                return Long.compare(id2SelectTimes.getOrDefault(o1.getContainerId(), Long.MAX_VALUE),
-                        id2SelectTimes.getOrDefault(o2.getContainerId(), Long.MAX_VALUE));
-            }
-        });
+        healthReportView.sort(Comparator.comparingDouble((o) -> id2SelectTimes.getOrDefault(o.getContainerId(), Long.MAX_VALUE)));
         addRate(rates, healthReportView);
 
         return rates;

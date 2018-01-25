@@ -94,23 +94,18 @@ public abstract class Container implements ContainerMasterProtocol {
         this.partitionTaskExecutors = new PartitionTaskExecutors(5);
         this.partitionTaskExecutors.init();
 
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Container.this.close();
-            }
-        }));
+        Runtime.getRuntime().addShutdownHook(new Thread(this::close));
 
         doStart();
         log.info("container(id=" + containerId + ", nodeId=" + belong2 + ") started");
 
         //启动定时汇报心跳线程
-        scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                healthReport();
-            }
-        }, 0, reportInternal, TimeUnit.MILLISECONDS);
+        scheduledExecutorService.scheduleAtFixedRate(
+                this::healthReport,
+                0,
+                reportInternal,
+                TimeUnit.MILLISECONDS
+        );
     }
 
     /**
@@ -135,8 +130,6 @@ public abstract class Container implements ContainerMasterProtocol {
 
     /**
      * 保证配置应用按接受顺序进行,也就是说不会存在同一app同时配置不同的配置
-     * @param configs
-     * @return
      */
     @Override
     public Boolean updateConfig(List<Properties> configs) {
@@ -206,8 +199,6 @@ public abstract class Container implements ContainerMasterProtocol {
 
     /**
      *
-     * @param callable
-     * @param appName
      */
     private void deployApp(Callable callable, String appName){
         partitionTaskExecutors.execute(appName, callable);

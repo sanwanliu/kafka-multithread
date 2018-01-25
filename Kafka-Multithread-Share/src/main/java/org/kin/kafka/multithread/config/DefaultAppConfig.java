@@ -17,7 +17,7 @@ public class DefaultAppConfig {
     public static final String OPOT = "OPOT";
     public static final String OPMT = "OPMT";
     public static final String OPMT2 = "OPMT2";
-    public static final String OCOT = "OCOT";;
+    public static final String OCOT = "OCOT";
 
     //message fetcher
     public static final String DEFAULT_MESSAGEFETCHER_POLL_TIMEOUT = "1000";

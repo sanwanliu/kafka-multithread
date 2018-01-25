@@ -8,11 +8,6 @@ import java.lang.reflect.Field;
 public class ClassUtils {
     /**
      * 通过无参构造器实例化类
-     * @param claxx
-     * @param <T>
-     * @return
-     * @throws IllegalAccessException
-     * @throws InstantiationException
      */
     public static <T> T instance(Class<T> claxx){
         if(claxx == null){
@@ -21,9 +16,9 @@ public class ClassUtils {
         try {
             return claxx.newInstance();
         } catch (InstantiationException e) {
-            e.printStackTrace();
+            ExceptionUtils.log(e);
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            ExceptionUtils.log(e);
         }
         return null;
     }
@@ -36,23 +31,17 @@ public class ClassUtils {
             Class claxx = Class.forName(classStr);
             return claxx.newInstance();
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            ExceptionUtils.log(e);
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            ExceptionUtils.log(e);
         } catch (InstantiationException e) {
-            e.printStackTrace();
+            ExceptionUtils.log(e);
         }
         return null;
     }
 
     /**
      * 根据参数调用构造器实例化类
-     * @param claxx
-     * @param args
-     * @param <T>
-     * @return
-     * @throws IllegalAccessException
-     * @throws InstantiationException
      */
     public static <T> T instance(Class<T> claxx, Object... args){
         if(claxx == null){
@@ -77,9 +66,9 @@ public class ClassUtils {
             }
             return target;
         } catch (InstantiationException e) {
-            e.printStackTrace();
+            ExceptionUtils.log(e);
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            ExceptionUtils.log(e);
         }
         return null;
     }
@@ -91,7 +80,7 @@ public class ClassUtils {
         try {
             return Class.forName(className);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            ExceptionUtils.log(e);
         }
         return null;
     }

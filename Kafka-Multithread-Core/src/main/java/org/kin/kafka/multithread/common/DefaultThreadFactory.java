@@ -19,10 +19,10 @@ public class DefaultThreadFactory implements ThreadFactory{
 
     private final AtomicInteger number = new AtomicInteger(1);
 
-        @Override
-        public Thread newThread(Runnable r) {
-            Thread thread = new Thread(r);
-            thread.setName(appName + "-" + group + "-" + number.getAndIncrement() + "-thread-");
-            return thread;
-        }
+    @Override
+    public Thread newThread(Runnable r) {
+        Thread thread = new Thread(r);
+        thread.setName(appName + "-" + group + "-" + number.getAndIncrement() + "-thread-");
+        return thread;
+    }
 }

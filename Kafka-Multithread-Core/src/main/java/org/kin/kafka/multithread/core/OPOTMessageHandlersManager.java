@@ -33,7 +33,7 @@ public class OPOTMessageHandlersManager extends AbstractMessageHandlersManager{
             Integer.MAX_VALUE,
             5,
             TimeUnit.SECONDS,
-            new SynchronousQueue<Runnable>(),
+            new SynchronousQueue(),
             new DefaultThreadFactory(config.getProperty(AppConfig.APPNAME), "OPOTMessageQueueHandler")
     );
 

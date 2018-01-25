@@ -11,7 +11,7 @@ public class HostUtils {
         try {
             return InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            ExceptionUtils.log(e);
         }
         return "127.0.0.1";
     }

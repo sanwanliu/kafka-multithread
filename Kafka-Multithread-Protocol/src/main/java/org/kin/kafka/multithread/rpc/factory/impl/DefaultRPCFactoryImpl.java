@@ -37,12 +37,7 @@ public class DefaultRPCFactoryImpl implements RPCFactory {
 
         serviceConfig.export();
 
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            @Override
-            public void run() {
-               serviceConfig.unexport();
-            }
-        }));
+        Runtime.getRuntime().addShutdownHook(new Thread(serviceConfig::unexport));
     }
 
     private void serviceWithoutRegistry(Class service, Object serviceImpl, String protocolName, int protocolPort){
@@ -73,12 +68,7 @@ public class DefaultRPCFactoryImpl implements RPCFactory {
         referenceConfig.setRegistry(registryConfig);
         referenceConfig.setRetries(5);
 
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            @Override
-            public void run() {
-                referenceConfig.destroy();
-            }
-        }));
+        Runtime.getRuntime().addShutdownHook(new Thread(referenceConfig::destroy));
 
         return (T) referenceConfig.get();
     }
@@ -94,12 +84,7 @@ public class DefaultRPCFactoryImpl implements RPCFactory {
         referenceConfig.setUrl("dubbo://" + host + ":" + port + "/" + service.getName());
         referenceConfig.setRetries(5);
 
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            @Override
-            public void run() {
-                referenceConfig.destroy();
-            }
-        }));
+        Runtime.getRuntime().addShutdownHook(new Thread(referenceConfig::destroy));
 
         return (T) referenceConfig.get();
     }

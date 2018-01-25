@@ -11,6 +11,7 @@ import org.kin.kafka.multithread.configcenter.ReConfigable;
 import org.kin.kafka.multithread.utils.AppConfigUtils;
 import org.kin.kafka.multithread.domain.ConsumerRecordInfo;
 import org.kin.kafka.multithread.utils.ClassUtils;
+import org.kin.kafka.multithread.utils.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +55,6 @@ public abstract class AbstractMessageHandlersManager implements MessageHandlersM
 
     /**
      * 注册topics对应的message handlers class实例
-     * @param topic2HandlerClass
      */
     public void registerHandlers(Map<String, Class<? extends MessageHandler>> topic2HandlerClass){
         this.topic2HandlerClass = topic2HandlerClass;
@@ -62,7 +62,6 @@ public abstract class AbstractMessageHandlersManager implements MessageHandlersM
 
     /**
      * 注册topics对应的commit Strategies class实例
-     * @param topic2CommitStrategyClass
      */
     public void registerCommitStrategies(Map<String, Class<? extends CommitStrategy>> topic2CommitStrategyClass){
         this.topic2CommitStrategyClass = topic2CommitStrategyClass;
@@ -70,8 +69,6 @@ public abstract class AbstractMessageHandlersManager implements MessageHandlersM
 
     /**
      * 通过class信息实例化Message handler并调用setup方法进行初始化
-     * @param topic
-     * @return
      */
     protected MessageHandler newMessageHandler(String topic){
         Class<? extends MessageHandler> claxx = topic2HandlerClass.get(topic);
@@ -82,12 +79,10 @@ public abstract class AbstractMessageHandlersManager implements MessageHandlersM
                 messageHandler.setup(config);
 
                 return messageHandler;
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
+            } catch (IllegalAccessException | InstantiationException e) {
+                ExceptionUtils.log(e);
             } catch (Exception e) {
-                e.printStackTrace();
+                ExceptionUtils.log(e);
             }
         }
         throw new IllegalStateException("appliction must set a message handler for one topic");
@@ -95,8 +90,6 @@ public abstract class AbstractMessageHandlersManager implements MessageHandlersM
 
     /**
      * 通过class信息实例化Commit strategy并调用setup方法进行初始化
-     * @param topic
-     * @return
      */
     protected CommitStrategy newCommitStrategy(String topic){
         Class<? extends CommitStrategy> claxx = topic2CommitStrategyClass.get(topic);
@@ -107,12 +100,10 @@ public abstract class AbstractMessageHandlersManager implements MessageHandlersM
                 commitStrategy.setup(config);
 
                 return commitStrategy;
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
+            } catch (IllegalAccessException | InstantiationException e) {
+                ExceptionUtils.log(e);
             } catch (Exception e) {
-                e.printStackTrace();
+                ExceptionUtils.log(e);
             }
         }
         throw new IllegalStateException("appliction must set a commit strategy for one topic");
@@ -158,9 +149,6 @@ public abstract class AbstractMessageHandlersManager implements MessageHandlersM
 
     /**
      * 更新更新配置标识状态
-     * @param expected
-     * @param update
-     * @return
      */
     public boolean updateReConfigStatus(boolean expected, boolean update){
         return isReconfig.compareAndSet(expected, update);
@@ -217,7 +205,6 @@ public abstract class AbstractMessageHandlersManager implements MessageHandlersM
 
         /**
          * 判断线程是否终止
-         * @return
          */
         protected boolean isTerminated() {
             return isTerminated;
@@ -241,7 +228,6 @@ public abstract class AbstractMessageHandlersManager implements MessageHandlersM
 
         /**
          * 执行消息处理,包括调用callback
-         * @param record
          */
         private void execute(ConsumerRecordInfo record){
             try {
@@ -258,8 +244,6 @@ public abstract class AbstractMessageHandlersManager implements MessageHandlersM
 
         /**
          * 真正对消息进行处理
-         * @param record
-         * @throws Exception
          */
         protected void doExecute(ConsumerRecordInfo record) throws Exception {
             messageHandler.handle(record.record());
@@ -267,7 +251,6 @@ public abstract class AbstractMessageHandlersManager implements MessageHandlersM
 
         /**
          * 消息处理完成,提交Offset(判断成功才提交)
-         * @param record
          */
         protected void commit(ConsumerRecordInfo record){
             if(commitStrategy.isToCommit(messageHandler, record.record())){
@@ -365,7 +348,7 @@ public abstract class AbstractMessageHandlersManager implements MessageHandlersM
         }
     }
 
-    public static enum MsgHandlerManagerModel{
+    public enum MsgHandlerManagerModel{
         OPOT("OPOT"), OPMT("OPMT"), OPMT2("OPMT2"), OCOT("OCOT");
 
         private String desc;

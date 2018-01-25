@@ -91,7 +91,7 @@ public class MessageFetcher<K, V> extends Thread implements Application {
 
         log();
 
-        this.consumer = new KafkaConsumer<K, V>(config);
+        this.consumer = new KafkaConsumer(config);
         this.consumer.subscribe(AppConfigUtils.getSubscribeTopic(config), new MessageFetcher.InnerConsumerRebalanceListener<>(this));
 
         //设置Kafka consumer某些分区开始消费的Offset
@@ -302,7 +302,7 @@ public class MessageFetcher<K, V> extends Thread implements Application {
 
     /**
      * 异步更新配置(仅仅设置标识),但要stop the world并保持kafka连接
-     * @param config 新配置
+     * @param newConfig 新配置
      */
     @Override
     public void reConfig(Properties newConfig) {
@@ -417,14 +417,14 @@ public class MessageFetcher<K, V> extends Thread implements Application {
             }
 
             //设置标识,禁止message fetcher dispatch 消息
-            messageFetcher.getHandlersManager().consumerRebalanceNotify(new HashSet<TopicPartition>(collection));
+            messageFetcher.getHandlersManager().consumerRebalanceNotify(new HashSet(collection));
             //保存之前分配到的TopicPartition
             beforeAssignedTopicPartition = new HashSet<>(collection);
             //提交最新处理完的Offset
             messageFetcher.commitOffsetsSyncWhenRebalancing();
 
             //缓存当前Consumer poll到的Offset
-            if(collection != null && collection.size() > 0){
+            if(collection.size() > 0){
                 log.info("consumer origin assignment: " + TPStrUtils.topicPartitionsStr(collection));
                 log.info("consumer rebalancing...");
                 //保存在jvm内存中
@@ -448,8 +448,8 @@ public class MessageFetcher<K, V> extends Thread implements Application {
             beforeAssignedTopicPartition = null;
 
             //重置consumer position并reset缓存
-            if(collection != null && collection.size() > 0){
-                for(TopicPartition topicPartition: (Collection<TopicPartition>)collection){
+            if(collection.size() > 0){
+                for(TopicPartition topicPartition: collection){
                     Long nowOffset = topicPartition2Offset.get(topicPartition);
                     if(nowOffset != null){
                         messageFetcher.consumer.seek(topicPartition, nowOffset);

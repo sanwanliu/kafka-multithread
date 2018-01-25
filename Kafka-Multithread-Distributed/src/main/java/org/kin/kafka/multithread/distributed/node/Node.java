@@ -126,12 +126,9 @@ public class Node implements NodeMasterProtocol{
         RPCFactories.instance().serviceWithoutRegistry(NodeMasterProtocol.class, this, nodeProtocolPort);
         log.info("NodeMasterProtocol rpc interface inited, binding on {}:{}", HostUtils.localhost(), nodeProtocolPort);
 
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            @Override
-            public void run() {
-                configFetcher.close();
-                Node.this.close();
-            }
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            configFetcher.close();
+            Node.this.close();
         }));
         log.info("node inited");
     }
@@ -150,8 +147,8 @@ public class Node implements NodeMasterProtocol{
 
                 ChildRunModel runModel = ChildRunModel.getByName(newConfig.getProperty(AppConfig.APP_CHILD_RUN_MODEL));
 
-                ContainerMasterProtocol containerMasterProtocol = null;
-                ContainerContext containerContext = null;
+                ContainerMasterProtocol containerMasterProtocol;
+                ContainerContext containerContext;
 
                 switch (runModel){
                     case JVM:

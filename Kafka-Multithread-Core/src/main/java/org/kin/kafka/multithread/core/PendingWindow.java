@@ -65,7 +65,7 @@ public class PendingWindow implements ReConfigable{
 
     /**
      * 当record为空时,也就是说明当前线程想抢占并提交有效连续的Offset
-     * @param record
+     * 会有一条调度线程定时检测是否能提交，目的是保证PendingWindow不能长期拥有未提交的Offset
      */
     public void commitFinished(ConsumerRecordInfo record){
         if(record != null){

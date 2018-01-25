@@ -1,15 +1,11 @@
 package org.kin.kafka.multithread.configcenter.manager.impl;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.kin.kafka.multithread.config.AppConfig;
 import org.kin.kafka.multithread.configcenter.ConfigCenterConfig;
 import org.kin.kafka.multithread.configcenter.manager.AbstractConfigStoreManager;
-import org.kin.kafka.multithread.configcenter.manager.ConfigStoreManager;
 import org.kin.kafka.multithread.configcenter.utils.PropertiesUtils;
 import org.kin.kafka.multithread.protocol.app.ApplicationContextInfo;
 import org.kin.kafka.multithread.utils.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Pipeline;

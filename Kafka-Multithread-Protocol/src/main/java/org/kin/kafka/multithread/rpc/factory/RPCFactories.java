@@ -51,26 +51,21 @@ public class RPCFactories{
     public static RPCFactory instance(final String factoryClass){
         RPCFactory rpcFactory = null;
         try {
-            rpcFactory =  rpcFactories.get(factoryClass, new Callable<RPCFactory>() {
-                @Override
-                public RPCFactory call() throws Exception {
-                    String iFactoryClass = factoryClass;
-                    if(iFactoryClass == null || iFactoryClass.equals("")){
-                        iFactoryClass = DEFAULT_RPCFACTORY;
-                    }
-                    log.info("init RPCFactory(class = " + iFactoryClass + ")");
-                    RPCFactory factory = (RPCFactory) ClassUtils.instance(iFactoryClass);
-
-                    rpcFactories.put(iFactoryClass, factory);
-                    return factory;
+            rpcFactory =  rpcFactories.get(factoryClass, () -> {
+                String iFactoryClass = factoryClass;
+                if(iFactoryClass == null || iFactoryClass.equals("")){
+                    iFactoryClass = DEFAULT_RPCFACTORY;
                 }
+                log.info("init RPCFactory(class = " + iFactoryClass + ")");
+                RPCFactory factory = (RPCFactory) ClassUtils.instance(iFactoryClass);
+
+                rpcFactories.put(iFactoryClass, factory);
+                return factory;
             });
         } catch (ExecutionException e) {
             log.error("hit exception when initting RPCFactory(class = " + factoryClass + ")");
             ExceptionUtils.log(e);
         }
-        finally {
-            return rpcFactory;
-        }
+        return rpcFactory;
     }
 }

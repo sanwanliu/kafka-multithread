@@ -48,7 +48,7 @@ public class OCOTMultiProcessor<K, V>  implements Application{
      * 更新配置和Rebalance有可能导致多余线程在线程池
      */
     private ThreadPoolExecutor threads;
-    private List<OCOTProcessor<K, V>> processors = new ArrayList<>();
+    private List<OCOTProcessor> processors = new ArrayList<>();
 
     private AtomicBoolean isReConfig = new AtomicBoolean(false);
     private boolean isAutoCommit = false;
@@ -65,7 +65,7 @@ public class OCOTMultiProcessor<K, V>  implements Application{
                 Integer.MAX_VALUE,
                 5,
                 TimeUnit.SECONDS,
-                new SynchronousQueue<Runnable>(),
+                new SynchronousQueue(),
                 new DefaultThreadFactory(config.getProperty(AppConfig.APPNAME), "OCOTProcessor")
         );
         isAutoCommit = Boolean.valueOf(config.getProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG));
@@ -105,7 +105,7 @@ public class OCOTMultiProcessor<K, V>  implements Application{
     public void start(){
         log.info("start [" + consumerNum + "] message processors...");
         for(int i = 0; i < consumerNum; i++){
-            OCOTProcessor<K, V> processor = newProcessor(i);
+            OCOTProcessor processor = newProcessor(i);
             processors.add(processor);
             threads.submit(processor);
         }
@@ -115,7 +115,7 @@ public class OCOTMultiProcessor<K, V>  implements Application{
     @Override
     public void close(){
         log.info("[" + consumerNum + "] message processors closing");
-        for(OCOTProcessor<K, V> processor: processors){
+        for(OCOTProcessor processor: processors){
             processor.close();
         }
 
@@ -131,8 +131,8 @@ public class OCOTMultiProcessor<K, V>  implements Application{
         return this.config;
     }
 
-    private OCOTProcessor<K, V> newProcessor(int processorId){
-            return new OCOTProcessor<>(processorId,
+    private OCOTProcessor newProcessor(int processorId){
+            return new OCOTProcessor(processorId,
                             config,
                             topics,
                             ClassUtils.instance(messageHandlerClass),
@@ -170,7 +170,7 @@ public class OCOTMultiProcessor<K, V>  implements Application{
                     for(int i = nowProcessorId;
                         i < nowProcessorId + (consumerNum - this.consumerNum);
                         i++){
-                        OCOTProcessor<K, V> processor = newProcessor(i);
+                        OCOTProcessor processor = newProcessor(i);
                         processors.add(processor);
                         threads.submit(processor);
                     }
@@ -202,7 +202,7 @@ public class OCOTMultiProcessor<K, V>  implements Application{
         log.info("OCOTMultiProcessor reconfiged");
     }
 
-    public class OCOTProcessor<K, V> implements Runnable, ReConfigable {
+    public class OCOTProcessor implements Runnable, ReConfigable {
         private final Logger log = LoggerFactory.getLogger(OCOTProcessor.class);
         private final int processorId;
         private final KafkaConsumer<K, V>  consumer;
@@ -228,7 +228,7 @@ public class OCOTMultiProcessor<K, V>  implements Application{
                               Class<? extends ConsumerRebalanceListener> consumerRebalanceListenerClass,
                               CallBack callBack) {
             this.processorId = processorId;
-            this.consumer = new KafkaConsumer<K, V>(config);
+            this.consumer = new KafkaConsumer(config);
             this.messageHandler = messageHandler;
             this.commitStrategy = commitStrategy;
             this.callBack = callBack;
@@ -367,7 +367,7 @@ public class OCOTMultiProcessor<K, V>  implements Application{
                     }
                     log.debug("message processor-" + processorId + " receive [" + records.count() + "] messages");
                     for(ConsumerRecord<K, V> record: records){
-                        ConsumerRecordInfo<K, V> consumerRecordInfo = new ConsumerRecordInfo<K, V>(record, callBack);
+                        ConsumerRecordInfo<K, V> consumerRecordInfo = new ConsumerRecordInfo(record, callBack);
                         //存在可能消息积压在此处,调用close后可能会阻塞在这里,因此,两次判断isStopped标识来确保调用close后在进行关闭动作
                         if(isStopped){
                             break;

@@ -59,21 +59,16 @@ public class AppConfigUtils {
             throw new IllegalStateException("last properties or new properties state wrong");
         }
 
-        if(lastConfig == null && newConfig != null){
+        if(lastConfig == null){
             return true;
         }
 
-        if(lastConfig != null && newConfig == null){
+        if(newConfig == null){
             return true;
         }
 
-        if(lastConfig.containsKey(key) && newConfig.containsKey(key)){
-            if(!lastConfig.get(key).equals(newConfig.get(key))){
-                return true;
-            }
-            else{
-                return false;
-            }
+        if(lastConfig.containsKey(key)){
+            return isConfigItemChange(lastConfig.get(key), newConfig, key);
         }
         else{
             throw new IllegalStateException("last properties or new properties state wrong");
@@ -109,7 +104,7 @@ public class AppConfigUtils {
         }
 
         boolean result = false;
-        if(lastConfig != null && newConfig != null){
+        if(lastConfig != null){
             if(lastConfig.size() == newConfig.size()){
                 for(Object key: lastConfig.keySet()){
                     if(newConfig.contains(key)){
@@ -133,9 +128,7 @@ public class AppConfigUtils {
         }
 
         Set<String> topics = new HashSet<>();
-        for(String topic: config.getProperty(AppConfig.KAFKA_CONSUMER_SUBSCRIBE).split(",")){
-            topics.add(topic);
-        }
+        topics.addAll(Arrays.asList(config.getProperty(AppConfig.KAFKA_CONSUMER_SUBSCRIBE).split(",")));
         return topics;
     }
 
@@ -242,9 +235,7 @@ public class AppConfigUtils {
         //检查必要配置
         AppConfigUtils.checkRequireConfig(newConfig);
         //检查配置格式
-        if(!checkConfigValueFormat(newConfig)){
-            return;
-        }
+        checkConfigValueFormat(newConfig);
     }
 
     public static boolean checkConfigValueFormat(Properties config){
@@ -262,7 +253,7 @@ public class AppConfigUtils {
     public static String toString(Properties config){
         StringBuilder sb = new StringBuilder();
         for(Map.Entry<Object, Object> entry: config.entrySet()){
-            sb.append(entry.getKey() + "  =  " + entry.getValue() + System.lineSeparator());
+            sb.append(entry.getKey()).append("  =  ").append(entry.getValue()).append(System.lineSeparator());
         }
         return sb.toString();
     }

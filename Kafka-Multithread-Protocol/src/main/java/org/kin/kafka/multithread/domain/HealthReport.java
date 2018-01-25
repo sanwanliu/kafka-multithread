@@ -87,7 +87,8 @@ public class HealthReport implements Serializable{
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
+    public HealthReport clone() throws CloneNotSupportedException {
+        super.clone();
         HealthReport healthReport = new HealthReport(containerId, appNums, containerIdleTimeout);
         healthReport.setAvailableProcessors(availableProcessors);
         healthReport.setTotalMemory(totalMemory);

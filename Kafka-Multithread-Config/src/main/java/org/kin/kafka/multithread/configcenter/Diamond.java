@@ -17,6 +17,7 @@ import org.kin.kafka.multithread.protocol.configcenter.AdminProtocol;
 import org.kin.kafka.multithread.protocol.configcenter.DiamondMasterProtocol;
 import org.kin.kafka.multithread.rpc.factory.RPCFactories;
 import org.kin.kafka.multithread.utils.ClassUtils;
+import org.kin.kafka.multithread.utils.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,12 +94,7 @@ public class Diamond implements DiamondMasterProtocol, AdminProtocol{
     public void start(){
         log.info("diamond starting...");
         init();
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            @Override
-            public void run() {
-                close();
-            }
-        }));
+        Runtime.getRuntime().addShutdownHook(new Thread(this::close));
 
         RPCFactories.instance().serviceWithoutRegistry(
                 DiamondMasterProtocol.class,
@@ -115,11 +111,11 @@ public class Diamond implements DiamondMasterProtocol, AdminProtocol{
 
         log.info("diamond started");
 
-        while (true){
+        for(;;){
             try {
                 Thread.sleep(60 * 1000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                ExceptionUtils.log(e);
             }
         }
     }
@@ -181,10 +177,6 @@ public class Diamond implements DiamondMasterProtocol, AdminProtocol{
 
     /**
      * 仅仅获取持久化的配置,也就是应用的真实配置
-     * @param appName
-     * @param host
-     * @param type
-     * @return
      */
     @Override
     @GET

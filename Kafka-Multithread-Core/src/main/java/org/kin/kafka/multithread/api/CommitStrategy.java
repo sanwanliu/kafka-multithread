@@ -11,14 +11,11 @@ import java.util.Properties;
 public interface CommitStrategy {
     /**
      * 初始化
-     * @throws Exception
      */
     void setup(Properties config) throws Exception;
 
     /**
      * 判断是否满足自定义规则,满足则返回true
-     * @param record
-     * @return
      */
     boolean isToCommit(MessageHandler messageHandler, ConsumerRecord record);
 
@@ -26,9 +23,9 @@ public interface CommitStrategy {
      * 重置规则
      */
     void reset();
+
     /**
      *
-     * @throws Exception
      */
     void cleanup() throws Exception;
 

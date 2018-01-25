@@ -16,8 +16,6 @@ import java.util.concurrent.Executors;
  *
  */
 public class JVMContainer extends Container {
-    private ContainerMasterProtocol containerMasterProtocol;
-
     public JVMContainer(ContainerContext containerContext, NodeContext nodeContext, NodeMasterProtocol nodeMasterProtocol) {
         super(containerContext, nodeContext);
         super.nodeMasterProtocol = nodeMasterProtocol;
@@ -25,7 +23,6 @@ public class JVMContainer extends Container {
 
     @Override
     public void doStart() {
-        containerMasterProtocol = this;
     }
 
     @Override

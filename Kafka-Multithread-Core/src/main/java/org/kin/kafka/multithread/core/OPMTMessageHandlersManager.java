@@ -136,7 +136,7 @@ public class OPMTMessageHandlersManager extends AbstractMessageHandlersManager {
                     maxThreadSizePerPartition,
                     60,
                     TimeUnit.SECONDS,
-                    new LinkedBlockingQueue<Runnable>(this.threadQueueSizePerPartition),
+                    new LinkedBlockingQueue(this.threadQueueSizePerPartition),
                     new DefaultThreadFactory(config.getProperty(AppConfig.APPNAME), "MessageHandler")
             );
             topicPartition2Pools.put(topicPartition, pool);

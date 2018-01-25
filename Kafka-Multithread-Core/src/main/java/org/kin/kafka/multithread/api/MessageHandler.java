@@ -11,20 +11,16 @@ import java.util.Properties;
 public interface MessageHandler<K, V> {
     /**
      * 初始化
-     * @throws Exception
      */
     void setup(Properties config) throws Exception;
 
     /**
      * 消息处理
-     * @param record
-     * @throws Exception
      */
     void handle(ConsumerRecord<K, V> record) throws Exception;
 
     /**
      * 释放占用资源
-     * @throws Exception
      */
     void cleanup() throws Exception;
 }
