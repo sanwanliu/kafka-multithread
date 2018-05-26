@@ -1,9 +1,7 @@
 
 .idea/*
+*/.idea/*
 *.iml
+*/*.iml
 target/*
-Kafka-Multithread-Config/target/*
-Kafka-Multithread-Core/target/*
-Kafka-Multithread-Distributed/target/*
-Kafka-Multithread-Protocol/target/*
-Kafka-Multithread-Share/target/*
+*/target/*
