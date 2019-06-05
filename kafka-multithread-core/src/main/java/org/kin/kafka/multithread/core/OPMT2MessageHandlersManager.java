@@ -4,12 +4,12 @@ import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.log4j.Level;
 import org.kin.framework.log.Log4jLoggerBinder;
-import org.kin.kafka.multithread.api.MessageHandler;
 import org.kin.kafka.multithread.api.CommitStrategy;
+import org.kin.kafka.multithread.api.MessageHandler;
 import org.kin.kafka.multithread.common.DefaultThreadFactory;
 import org.kin.kafka.multithread.config.AppConfig;
-import org.kin.kafka.multithread.utils.AppConfigUtils;
 import org.kin.kafka.multithread.domain.ConsumerRecordInfo;
+import org.kin.kafka.multithread.utils.AppConfigUtils;
 import org.kin.kafka.multithread.utils.TPStrUtils;
 
 import java.util.*;

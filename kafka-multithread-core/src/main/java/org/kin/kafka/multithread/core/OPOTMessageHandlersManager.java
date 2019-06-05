@@ -4,8 +4,8 @@ import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.log4j.Level;
 import org.kin.framework.log.Log4jLoggerBinder;
-import org.kin.kafka.multithread.api.MessageHandler;
 import org.kin.kafka.multithread.api.CommitStrategy;
+import org.kin.kafka.multithread.api.MessageHandler;
 import org.kin.kafka.multithread.common.DefaultThreadFactory;
 import org.kin.kafka.multithread.config.AppConfig;
 import org.kin.kafka.multithread.domain.ConsumerRecordInfo;
@@ -14,7 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by hjq on 2017/6/19.

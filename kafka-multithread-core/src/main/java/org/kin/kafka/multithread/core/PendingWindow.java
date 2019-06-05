@@ -8,7 +8,9 @@ import org.kin.kafka.multithread.domain.ConsumerRecordInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 

@@ -1,7 +1,5 @@
 package org.kin.kafka.multithread.common;
 
-import org.kin.kafka.multithread.config.AppConfig;
-
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 

@@ -1,7 +1,5 @@
 package org.kin.kafka.multithread.distributed.node.config;
 
-import org.kin.kafka.multithread.config.DefaultAppConfig;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;

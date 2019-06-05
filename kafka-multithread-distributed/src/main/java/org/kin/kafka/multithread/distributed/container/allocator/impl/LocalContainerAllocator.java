@@ -15,9 +15,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.ToDoubleBiFunction;
-import java.util.function.ToDoubleFunction;
 
 /**
  * Created by huangjianqin on 2017/9/19.

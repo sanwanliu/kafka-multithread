@@ -14,7 +14,10 @@ import org.kin.kafka.multithread.utils.AppConfigUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by hjq on 2017/6/19.

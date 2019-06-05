@@ -1,13 +1,5 @@
 package org.kin.kafka.multithread.configcenter;
 
-import org.kin.kafka.multithread.protocol.configcenter.AdminProtocol;
-import org.kin.kafka.multithread.protocol.configcenter.DiamondMasterProtocol;
-import org.kin.kafka.multithread.rpc.factory.RPCFactories;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Properties;
-
 /**
  * Created by huangjianqin on 2017/9/11.
  */

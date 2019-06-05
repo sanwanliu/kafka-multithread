@@ -7,14 +7,17 @@ import org.kin.framework.log.Log4jLoggerBinder;
 import org.kin.kafka.multithread.api.MessageHandler;
 import org.kin.kafka.multithread.common.DefaultThreadFactory;
 import org.kin.kafka.multithread.config.AppConfig;
-import org.kin.kafka.multithread.utils.AppConfigUtils;
 import org.kin.kafka.multithread.domain.ConsumerRecordInfo;
+import org.kin.kafka.multithread.utils.AppConfigUtils;
 import org.kin.kafka.multithread.utils.TPStrUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by hjq on 2017/7/4.

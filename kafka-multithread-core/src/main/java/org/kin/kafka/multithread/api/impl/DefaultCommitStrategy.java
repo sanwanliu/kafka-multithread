@@ -1,8 +1,8 @@
 package org.kin.kafka.multithread.api.impl;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.kin.kafka.multithread.api.MessageHandler;
 import org.kin.kafka.multithread.api.CommitStrategy;
+import org.kin.kafka.multithread.api.MessageHandler;
 
 import java.util.Properties;
 
