@@ -1,7 +1,7 @@
 package org.kin.kafka.multithread.distributed.container;
 
 import org.apache.log4j.Level;
-import org.kin.framework.concurrent.PartitionTaskExecutors;
+import org.kin.framework.concurrent.PartitionTaskExecutor;
 import org.kin.framework.log.Log4jLoggerBinder;
 import org.kin.kafka.multithread.api.MultiThreadConsumerManager;
 import org.kin.kafka.multithread.config.AppConfig;
@@ -51,7 +51,7 @@ public abstract class Container implements ContainerMasterProtocol {
     //在另外的线程执行配置更新
     //多线程部署app,保证,同一appName按顺序执行部署命令
     //最多5条线程
-    private PartitionTaskExecutors partitionTaskExecutors;
+    private PartitionTaskExecutor partitionTaskExecutor;
 
     protected MultiThreadConsumerManager appManager = MultiThreadConsumerManager.instance();
 
@@ -91,8 +91,7 @@ public abstract class Container implements ContainerMasterProtocol {
     public void start(){
         log.info("container(id=" + containerId + ", nodeId=" + belong2 + ") starting");
 
-        this.partitionTaskExecutors = new PartitionTaskExecutors(5);
-        this.partitionTaskExecutors.init();
+        this.partitionTaskExecutor = new PartitionTaskExecutor(5);
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::close));
 
@@ -115,7 +114,7 @@ public abstract class Container implements ContainerMasterProtocol {
     public void close(){
         log.info("container(id=" + containerId + ", nodeId=" + belong2 + ") closing");
         scheduledExecutorService.shutdownNow();
-        partitionTaskExecutors.shutdown();
+        partitionTaskExecutor.shutdown();
         //通知Node container关闭了
         nodeMasterProtocol.containerClosed(containerId);
         doClose();
@@ -201,7 +200,7 @@ public abstract class Container implements ContainerMasterProtocol {
      *
      */
     private void deployApp(Callable callable, String appName){
-        partitionTaskExecutors.execute(appName, callable);
+        partitionTaskExecutor.execute(appName, callable);
     }
 
     public long getContainerId() {
