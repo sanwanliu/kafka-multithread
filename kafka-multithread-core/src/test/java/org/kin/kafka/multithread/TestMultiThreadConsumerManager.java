@@ -1,18 +1,18 @@
 package org.kin.kafka.multithread;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.kin.kafka.multithread.domain.ApplicationContext;
 import org.kin.kafka.multithread.api.MultiThreadConsumerManager;
 import org.kin.kafka.multithread.api.impl.DefaultCommitStrategy;
-import org.kin.kafka.multithread.utils.AppConfigUtils;
-import org.kin.kafka.multithread.common.PropertiesWrapper;
-import org.kin.kafka.multithread.statistics.Counters;
 import org.kin.kafka.multithread.api.impl.RealEnvironmentMessageHandler;
+import org.kin.kafka.multithread.common.PropertiesWrapper;
 import org.kin.kafka.multithread.config.AppConfig;
 import org.kin.kafka.multithread.config.DefaultAppConfig;
+import org.kin.kafka.multithread.domain.ApplicationContext;
+import org.kin.kafka.multithread.statistics.Counters;
 import org.kin.kafka.multithread.statistics.Statistics;
+import org.kin.kafka.multithread.utils.AppConfigUtils;
 
-import java.util.*;
+import java.util.Properties;
 
 /**
  * Created by hjq on 2017/6/22.

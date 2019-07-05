@@ -1,9 +1,6 @@
 package org.kin.kafka.multithread.configcenter;
 
 import org.junit.Test;
-import org.kin.kafka.multithread.config.AppConfig;
-import org.kin.kafka.multithread.configcenter.utils.YAMLUtils;
-import org.kin.kafka.multithread.domain.ConfigFetcherHeartbeatResponse;
 import org.kin.kafka.multithread.domain.ConfigFetcherHeartbeatRequest;
 import org.kin.kafka.multithread.protocol.app.ApplicationContextInfo;
 import org.kin.kafka.multithread.protocol.configcenter.DiamondMasterProtocol;
@@ -12,7 +9,6 @@ import org.kin.kafka.multithread.utils.HostUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Properties;
 
 /**
  * Created by huangjianqin on 2017/10/17.
