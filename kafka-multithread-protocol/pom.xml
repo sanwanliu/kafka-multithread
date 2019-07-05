@@ -78,8 +78,4 @@
             <version>0.1.0.0</version>
         </dependency>
     </dependencies>
-
-    <build>
-        <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
-    </build>
 </project>
