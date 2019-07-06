@@ -2,10 +2,10 @@ package org.kin.kafka.multithread.configcenter;
 
 import org.junit.Before;
 import org.kin.kafka.multithread.config.AppConfig;
-import org.kin.kafka.multithread.configcenter.utils.JsonUtil;
-import org.kin.kafka.multithread.configcenter.utils.PropertiesUtil;
-import org.kin.kafka.multithread.configcenter.utils.YAMLUtil;
-import org.kin.kafka.multithread.utils.HostUtil;
+import org.kin.kafka.multithread.configcenter.utils.JsonUtils;
+import org.kin.kafka.multithread.configcenter.utils.PropertiesUtils;
+import org.kin.kafka.multithread.configcenter.utils.YAMLUtils;
+import org.kin.kafka.multithread.utils.HostUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,7 +24,7 @@ public class TestConfigBase {
         properties = new Properties();
         String path = TestDiamondRestClient.class.getResource("/").getPath() + "appConfig.properties";
         properties.load(new FileInputStream(new File(path)));
-        properties.setProperty(AppConfig.APPHOST, HostUtil.localhost());
+        properties.setProperty(AppConfig.APPHOST, HostUtils.localhost());
     }
 
     public static String getPropertiesStr(Properties properties){
@@ -37,11 +37,11 @@ public class TestConfigBase {
     }
 
     public static String getJSONConfig(Properties properties){
-        return JsonUtil.map2Json(PropertiesUtil.properties2Map(properties));
+        return JsonUtils.map2Json(PropertiesUtils.properties2Map(properties));
     }
 
     public static String getYAMLConfig(Properties properties){
-        return YAMLUtil.transfer2YamlStr(properties);
+        return YAMLUtils.transfer2YamlStr(properties);
     }
 
 }

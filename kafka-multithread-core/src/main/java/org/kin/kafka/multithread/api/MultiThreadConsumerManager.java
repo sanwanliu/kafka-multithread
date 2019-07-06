@@ -10,7 +10,7 @@ import org.kin.kafka.multithread.core.MessageFetcher;
 import org.kin.kafka.multithread.core.OCOTMultiProcessor;
 import org.kin.kafka.multithread.distributed.ChildRunModel;
 import org.kin.kafka.multithread.domain.ApplicationContext;
-import org.kin.kafka.multithread.utils.AppConfigUtil;
+import org.kin.kafka.multithread.utils.AppConfigUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -124,9 +124,9 @@ public class MultiThreadConsumerManager implements ReConfigable{
     }
 
     public <K, V> ApplicationContext newApplication(Properties config){
-        AppConfigUtil.oneNecessaryCheckAndFill(config);
+        AppConfigUtils.oneNecessaryCheckAndFill(config);
 
-        log.debug("deploying app..." + System.lineSeparator() + AppConfigUtil.toString(config));
+        log.debug("deploying app..." + System.lineSeparator() + AppConfigUtils.toString(config));
 
         String appName = config.getProperty(AppConfig.APPNAME);
 
@@ -202,7 +202,7 @@ public class MultiThreadConsumerManager implements ReConfigable{
      */
     @Override
     public void reConfig(Properties newConfig) {
-        AppConfigUtil.oneNecessaryCheckAndFill(newConfig);
+        AppConfigUtils.oneNecessaryCheckAndFill(newConfig);
 
         String appName = newConfig.getProperty(AppConfig.APPNAME);
 

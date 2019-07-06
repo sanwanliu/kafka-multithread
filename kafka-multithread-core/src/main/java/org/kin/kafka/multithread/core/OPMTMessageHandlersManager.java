@@ -8,8 +8,8 @@ import org.kin.kafka.multithread.api.MessageHandler;
 import org.kin.kafka.multithread.common.DefaultThreadFactory;
 import org.kin.kafka.multithread.config.AppConfig;
 import org.kin.kafka.multithread.domain.ConsumerRecordInfo;
-import org.kin.kafka.multithread.utils.AppConfigUtil;
-import org.kin.kafka.multithread.utils.TPStrUtil;
+import org.kin.kafka.multithread.utils.AppConfigUtils;
+import org.kin.kafka.multithread.utils.TPStrUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,7 +104,7 @@ public class OPMTMessageHandlersManager extends AbstractMessageHandlersManager {
 
     @Override
     public boolean dispatch(ConsumerRecordInfo consumerRecordInfo, Map<TopicPartition, OffsetAndMetadata> pendingOffsets) {
-        log.debug("dispatching message: " + TPStrUtil.consumerRecordDetail(consumerRecordInfo.record()));
+        log.debug("dispatching message: " + TPStrUtils.consumerRecordDetail(consumerRecordInfo.record()));
 
         //自动提交的情况下,不会使用pendingwindow,进而没必要启动一条定时线程来检索空的map实例
         if(!isAutoCommit && updatePengdingWindowAtFixRate == null){
@@ -176,7 +176,7 @@ public class OPMTMessageHandlersManager extends AbstractMessageHandlersManager {
         MessageHandler handler = messageHandlers.get((int)(topicPartition2Counter.get(topicPartition) % messageHandlers.size()));
         topicPartition2Counter.put(topicPartition, topicPartition2Counter.get(topicPartition) + 1);
 
-        log.debug("message: " + TPStrUtil.consumerRecordDetail(consumerRecordInfo.record()) + " wrappered as task has submit");
+        log.debug("message: " + TPStrUtils.consumerRecordDetail(consumerRecordInfo.record()) + " wrappered as task has submit");
         pool.execute(new MessageHandlerTask(handler, pendingWindow, consumerRecordInfo));
 
         return true;
@@ -277,7 +277,7 @@ public class OPMTMessageHandlersManager extends AbstractMessageHandlersManager {
         Integer threadQueueSizePerPartition = this.threadQueueSizePerPartition;
         Integer handlerSize = this.handlerSize;
 
-        if(AppConfigUtil.isConfigItemChange(String.valueOf(minThreadSizePerPartition), newConfig, AppConfig.OPMT_MINTHREADSIZEPERPARTITION)){
+        if(AppConfigUtils.isConfigItemChange(String.valueOf(minThreadSizePerPartition), newConfig, AppConfig.OPMT_MINTHREADSIZEPERPARTITION)){
             minThreadSizePerPartition = Integer.valueOf(newConfig.getProperty(AppConfig.OPMT_MINTHREADSIZEPERPARTITION));
 
             if(minThreadSizePerPartition <= 0){
@@ -285,21 +285,21 @@ public class OPMTMessageHandlersManager extends AbstractMessageHandlersManager {
             }
         }
 
-        if(AppConfigUtil.isConfigItemChange(String.valueOf(maxThreadSizePerPartition), newConfig, AppConfig.OPMT_MAXTHREADSIZEPERPARTITION)){
+        if(AppConfigUtils.isConfigItemChange(String.valueOf(maxThreadSizePerPartition), newConfig, AppConfig.OPMT_MAXTHREADSIZEPERPARTITION)){
             maxThreadSizePerPartition = Integer.valueOf(newConfig.getProperty(AppConfig.OPMT_MAXTHREADSIZEPERPARTITION));
 
             if(maxThreadSizePerPartition <= 0){
                 throw new IllegalStateException("config '" + AppConfig.OPMT_MAXTHREADSIZEPERPARTITION + "' state wrong");
             }
         }
-        if(AppConfigUtil.isConfigItemChange(String.valueOf(threadQueueSizePerPartition), newConfig, AppConfig.OPMT_THREADQUEUESIZEPERPARTITION)){
+        if(AppConfigUtils.isConfigItemChange(String.valueOf(threadQueueSizePerPartition), newConfig, AppConfig.OPMT_THREADQUEUESIZEPERPARTITION)){
             threadQueueSizePerPartition = Integer.valueOf(newConfig.getProperty(AppConfig.OPMT_THREADQUEUESIZEPERPARTITION));
 
             if(threadQueueSizePerPartition < 0){
                 throw new IllegalStateException("config '" + AppConfig.OPMT_THREADQUEUESIZEPERPARTITION + "' state wrong");
             }
         }
-        if(AppConfigUtil.isConfigItemChange(String.valueOf(handlerSize), newConfig, AppConfig.OPMT_HANDLERSIZE)){
+        if(AppConfigUtils.isConfigItemChange(String.valueOf(handlerSize), newConfig, AppConfig.OPMT_HANDLERSIZE)){
             handlerSize = Integer.valueOf(newConfig.getProperty(AppConfig.OPMT_HANDLERSIZE));
 
             if(handlerSize < 0){
@@ -444,7 +444,7 @@ public class OPMTMessageHandlersManager extends AbstractMessageHandlersManager {
         }
 
         //更新pendingwindow的配置
-        if(AppConfigUtil.isConfigItemChange(String.valueOf(slidingWindow), newConfig, AppConfig.PENDINGWINDOW_SLIDINGWINDOW)){
+        if(AppConfigUtils.isConfigItemChange(String.valueOf(slidingWindow), newConfig, AppConfig.PENDINGWINDOW_SLIDINGWINDOW)){
             int slidingWindow = this.slidingWindow;
 
             //不需要同步,因为stop the world(处理线程停止处理消息)

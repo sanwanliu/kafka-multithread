@@ -5,8 +5,8 @@ import com.google.common.cache.CacheBuilder;
 import org.apache.log4j.Level;
 import org.kin.framework.log.Log4jLoggerBinder;
 import org.kin.kafka.multithread.rpc.factory.impl.DefaultRPCFactoryImpl;
-import org.kin.kafka.multithread.utils.ClassUtil;
-import org.kin.kafka.multithread.utils.ExceptionUtil;
+import org.kin.kafka.multithread.utils.ClassUtils;
+import org.kin.kafka.multithread.utils.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,14 +56,14 @@ public class RPCFactories{
                     iFactoryClass = DEFAULT_RPCFACTORY;
                 }
                 log.info("init RPCFactory(class = " + iFactoryClass + ")");
-                RPCFactory factory = (RPCFactory) ClassUtil.instance(iFactoryClass);
+                RPCFactory factory = (RPCFactory) ClassUtils.instance(iFactoryClass);
 
                 rpcFactories.put(iFactoryClass, factory);
                 return factory;
             });
         } catch (ExecutionException e) {
             log.error("hit exception when initting RPCFactory(class = " + factoryClass + ")");
-            ExceptionUtil.log(e);
+            ExceptionUtils.log(e);
         }
         return rpcFactory;
     }

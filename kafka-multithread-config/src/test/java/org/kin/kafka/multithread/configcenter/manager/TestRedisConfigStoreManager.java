@@ -6,7 +6,7 @@ import org.kin.kafka.multithread.configcenter.ConfigCenterConfig;
 import org.kin.kafka.multithread.configcenter.TestDiamondRestClient;
 import org.kin.kafka.multithread.configcenter.manager.impl.RedisConfigStoreManager;
 import org.kin.kafka.multithread.protocol.app.ApplicationContextInfo;
-import org.kin.kafka.multithread.utils.ClassUtil;
+import org.kin.kafka.multithread.utils.ClassUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,7 +33,7 @@ public class TestRedisConfigStoreManager {
         config.put(ConfigCenterConfig.CONFIG_STOREMANAGER_SERVER_PORT, "6379");
 
         String storeManagerClass = RedisConfigStoreManager.class.getName();
-        configStoreManager = (ConfigStoreManager) ClassUtil.instance(storeManagerClass);
+        configStoreManager = (ConfigStoreManager) ClassUtils.instance(storeManagerClass);
     }
 
     public static String getPropertiesStr(Map properties){

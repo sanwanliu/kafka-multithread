@@ -5,7 +5,7 @@ import org.kin.kafka.multithread.domain.ConfigFetcherHeartbeatRequest;
 import org.kin.kafka.multithread.protocol.app.ApplicationContextInfo;
 import org.kin.kafka.multithread.protocol.configcenter.DiamondMasterProtocol;
 import org.kin.kafka.multithread.rpc.factory.RPCFactories;
-import org.kin.kafka.multithread.utils.HostUtil;
+import org.kin.kafka.multithread.utils.HostUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,14 +16,14 @@ import java.util.Collections;
 public class TestDiamondRPCClient extends TestConfigBase{
 
     public DiamondMasterProtocol client(){
-        return RPCFactories.instance().clientWithoutRegistry(DiamondMasterProtocol.class, HostUtil.localhost(), 60001);
+        return RPCFactories.instance().clientWithoutRegistry(DiamondMasterProtocol.class, HostUtils.localhost(), 60001);
     }
 
     @Test
     public void heartbeat(){
         ConfigFetcherHeartbeatRequest heartbeat = new ConfigFetcherHeartbeatRequest(
-                new ApplicationContextInfo("test1", HostUtil.localhost()),
-                Collections.singletonList(new ApplicationContextInfo("test1", HostUtil.localhost())),
+                new ApplicationContextInfo("test1", HostUtils.localhost()),
+                Collections.singletonList(new ApplicationContextInfo("test1", HostUtils.localhost())),
                 new ArrayList<>(),
                 System.currentTimeMillis()
         );

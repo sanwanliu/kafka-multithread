@@ -3,7 +3,7 @@ package org.kin.kafka.multithread.configcenter.codec.impl;
 import com.alibaba.fastjson.JSONObject;
 import org.kin.kafka.multithread.config.AppConfig;
 import org.kin.kafka.multithread.configcenter.codec.StoreCodec;
-import org.kin.kafka.multithread.configcenter.utils.JsonUtil;
+import org.kin.kafka.multithread.configcenter.utils.JsonUtils;
 
 import java.util.Map;
 
@@ -14,7 +14,7 @@ import java.util.Map;
 public class JsonStoreCodec implements StoreCodec {
     @Override
     public Map<String, String> deSerialize(String source) {
-        return JsonUtil.json2Map((JSONObject) JSONObject.parse(source));
+        return JsonUtils.json2Map((JSONObject) JSONObject.parse(source));
     }
 
     @Override
@@ -27,7 +27,7 @@ public class JsonStoreCodec implements StoreCodec {
 
     @Override
     public String serialize(Map<String, String> serialized) {
-        return JsonUtil.map2Json(serialized);
+        return JsonUtils.map2Json(serialized);
     }
 
     @Override

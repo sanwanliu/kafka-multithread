@@ -9,7 +9,7 @@ import org.kin.kafka.multithread.api.MessageHandler;
 import org.kin.kafka.multithread.common.DefaultThreadFactory;
 import org.kin.kafka.multithread.config.AppConfig;
 import org.kin.kafka.multithread.domain.ConsumerRecordInfo;
-import org.kin.kafka.multithread.utils.TPStrUtil;
+import org.kin.kafka.multithread.utils.TPStrUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,7 +72,7 @@ public class OPOTMessageHandlersManager extends AbstractMessageHandlersManager{
 
     @Override
     public boolean dispatch(ConsumerRecordInfo consumerRecordInfo, Map<TopicPartition, OffsetAndMetadata> pendingOffsets){
-        log.debug("dispatching message: " + TPStrUtil.consumerRecordDetail(consumerRecordInfo.record()));
+        log.debug("dispatching message: " + TPStrUtils.consumerRecordDetail(consumerRecordInfo.record()));
 
         while(isRebalance.get()){
             try {
@@ -87,7 +87,7 @@ public class OPOTMessageHandlersManager extends AbstractMessageHandlersManager{
             //已有该topic分区对应的线程启动
             //直接添加队列
             topicPartition2Thread.get(topicPartition).queue().add(consumerRecordInfo);
-            log.debug("message: " + TPStrUtil.consumerRecordDetail(consumerRecordInfo.record()) + "queued(" + topicPartition2Thread.get(topicPartition).queue().size() + " rest)");
+            log.debug("message: " + TPStrUtils.consumerRecordDetail(consumerRecordInfo.record()) + "queued(" + topicPartition2Thread.get(topicPartition).queue().size() + " rest)");
         }
         else{
             //没有该topic分区对应的线程'
@@ -96,7 +96,7 @@ public class OPOTMessageHandlersManager extends AbstractMessageHandlersManager{
             topicPartition2Thread.put(topicPartition, thread);
             thread.queue().add(consumerRecordInfo);
             runThread(thread);
-            log.debug("message: " + TPStrUtil.consumerRecordDetail(consumerRecordInfo.record()) + "queued(" + thread.queue.size() + " rest)");
+            log.debug("message: " + TPStrUtils.consumerRecordDetail(consumerRecordInfo.record()) + "queued(" + thread.queue.size() + " rest)");
         }
 
         return true;

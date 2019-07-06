@@ -10,9 +10,9 @@ import org.kin.kafka.multithread.domain.ConfigFetcherHeartbeatResponse;
 import org.kin.kafka.multithread.protocol.app.ApplicationContextInfo;
 import org.kin.kafka.multithread.protocol.configcenter.DiamondMasterProtocol;
 import org.kin.kafka.multithread.rpc.factory.RPCFactories;
-import org.kin.kafka.multithread.utils.AppConfigUtil;
-import org.kin.kafka.multithread.utils.ExceptionUtil;
-import org.kin.kafka.multithread.utils.HostUtil;
+import org.kin.kafka.multithread.utils.AppConfigUtils;
+import org.kin.kafka.multithread.utils.ExceptionUtils;
+import org.kin.kafka.multithread.utils.HostUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,7 +99,7 @@ public class ConfigFetcher extends Thread{
     @Override
     public void run() {
         ApplicationContextInfo myAppHost = new ApplicationContextInfo();
-        myAppHost.setHost(HostUtil.localhost());
+        myAppHost.setHost(HostUtils.localhost());
 
         int configCount = 0;
         int fetchTimeMills = 0;
@@ -121,7 +121,7 @@ public class ConfigFetcher extends Thread{
 
                 long startTime = System.currentTimeMillis();
                 //配置内容,格式匹配成功的配置
-                List<Properties> halfSuccessConfigs = AppConfigUtil.allNecessaryCheckAndFill(configFetcherHeartbeatResponse.getNewConfigs());
+                List<Properties> halfSuccessConfigs = AppConfigUtils.allNecessaryCheckAndFill(configFetcherHeartbeatResponse.getNewConfigs());
 
                 for(Properties newConfig: halfSuccessConfigs){
                     String appName = newConfig.getProperty(AppConfig.APPNAME);
@@ -137,12 +137,12 @@ public class ConfigFetcher extends Thread{
                         sleep(heartbeatInterval - (endTime - startTime));
                     }
                 } catch (InterruptedException e) {
-                    ExceptionUtil.log(e);
+                    ExceptionUtils.log(e);
                 }
             }
             log.info("config fetcher closed");
         }catch (Exception e){
-            ExceptionUtil.log(e);
+            ExceptionUtils.log(e);
             if(fetcherRestartTimes < 3){
                 fetcherRestartTimes ++;
                 log.warn("config Fetcher hit error when running, ready to restart(only has {} times chance)", 3 - fetcherRestartTimes);
@@ -164,7 +164,7 @@ public class ConfigFetcher extends Thread{
     }
 
     private ConfigFetcherHeartbeatResponse heartbeat(){
-        ApplicationContextInfo appHost = new ApplicationContextInfo("", HostUtil.localhost());
+        ApplicationContextInfo appHost = new ApplicationContextInfo("", HostUtils.localhost());
 
         List<ApplicationContextInfo> tmpSucceedAppNames = new ArrayList<>(succeedAppNames);
         List<ApplicationContextInfo> tmpFailAppNames = new ArrayList<>(failAppNames);

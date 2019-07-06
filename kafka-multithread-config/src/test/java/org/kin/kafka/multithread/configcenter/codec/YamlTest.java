@@ -1,6 +1,6 @@
 package org.kin.kafka.multithread.configcenter.codec;
 
-import org.kin.kafka.multithread.configcenter.utils.YAMLUtil;
+import org.kin.kafka.multithread.configcenter.utils.YAMLUtils;
 
 import java.util.Properties;
 
@@ -9,7 +9,7 @@ import java.util.Properties;
  */
 public class YamlTest {
     public static void main(String[] args){
-        Properties properties = YAMLUtil.loadYML2Properties(YamlTest.class.getResource("/").getPath() + "configcenter.yml");
+        Properties properties = YAMLUtils.loadYML2Properties(YamlTest.class.getResource("/").getPath() + "configcenter.yml");
         for(Object key: properties.keySet()){
             System.out.println(key + ">>" + properties.get(key));
         }

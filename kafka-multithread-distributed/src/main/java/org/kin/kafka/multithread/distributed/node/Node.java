@@ -9,15 +9,15 @@ import org.kin.kafka.multithread.distributed.container.allocator.ContainerAlloca
 import org.kin.kafka.multithread.distributed.container.allocator.impl.LocalContainerAllocator;
 import org.kin.kafka.multithread.distributed.container.impl.JVMContainer;
 import org.kin.kafka.multithread.distributed.node.config.NodeConfig;
-import org.kin.kafka.multithread.distributed.utils.NodeConfigUtil;
+import org.kin.kafka.multithread.distributed.utils.NodeConfigUtils;
 import org.kin.kafka.multithread.domain.ConfigResultRequest;
 import org.kin.kafka.multithread.domain.HealthReport;
 import org.kin.kafka.multithread.protocol.app.ApplicationContextInfo;
 import org.kin.kafka.multithread.protocol.distributed.ContainerMasterProtocol;
 import org.kin.kafka.multithread.protocol.distributed.NodeMasterProtocol;
 import org.kin.kafka.multithread.rpc.factory.RPCFactories;
-import org.kin.kafka.multithread.utils.ExceptionUtil;
-import org.kin.kafka.multithread.utils.HostUtil;
+import org.kin.kafka.multithread.utils.ExceptionUtils;
+import org.kin.kafka.multithread.utils.HostUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +41,7 @@ public class Node implements NodeMasterProtocol{
     static {log();}
     private static final Logger log = LoggerFactory.getLogger("Node");
 
-    private static final Long nodeId = Long.valueOf(HostUtil.localhost().replaceAll("\\.", ""));
+    private static final Long nodeId = Long.valueOf(HostUtils.localhost().replaceAll("\\.", ""));
     public static final int CONTAINER_NUM_LIMIT = 10;
     public static final long NODE_JVM_CONTAINER = nodeId * CONTAINER_NUM_LIMIT;
 
@@ -72,8 +72,8 @@ public class Node implements NodeMasterProtocol{
         }
         log.info("node config loaded");
         //校验配置
-        NodeConfigUtil.oneNecessaryCheckAndFill(nodeConfig);
-        log.info("config is Safe" + System.lineSeparator() + NodeConfigUtil.toString(nodeConfig));
+        NodeConfigUtils.oneNecessaryCheckAndFill(nodeConfig);
+        log.info("config is Safe" + System.lineSeparator() + NodeConfigUtils.toString(nodeConfig));
     }
 
     public Node(Properties nodeConfig) {
@@ -81,8 +81,8 @@ public class Node implements NodeMasterProtocol{
         this.nodeConfig = nodeConfig;
         log.info("node config loaded");
         //校验配置
-        NodeConfigUtil.oneNecessaryCheckAndFill(nodeConfig);
-        log.info("config is Safe" + System.lineSeparator() + NodeConfigUtil.toString(nodeConfig));
+        NodeConfigUtils.oneNecessaryCheckAndFill(nodeConfig);
+        log.info("config is Safe" + System.lineSeparator() + NodeConfigUtils.toString(nodeConfig));
     }
 
     /**
@@ -124,7 +124,7 @@ public class Node implements NodeMasterProtocol{
         this.containerAllocateRetry = Integer.valueOf(nodeConfig.getProperty(NodeConfig.CONTAINER_ALLOCATE_RETRY));
 
         RPCFactories.instance().serviceWithoutRegistry(NodeMasterProtocol.class, this, nodeProtocolPort);
-        log.info("NodeMasterProtocol rpc interface inited, binding on {}:{}", HostUtil.localhost(), nodeProtocolPort);
+        log.info("NodeMasterProtocol rpc interface inited, binding on {}:{}", HostUtils.localhost(), nodeProtocolPort);
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             configFetcher.close();
@@ -139,7 +139,7 @@ public class Node implements NodeMasterProtocol{
         long containerHealthReportInternal = Long.valueOf(nodeConfig.getProperty(NodeConfig.CONTAINER_HEALTHREPORT_INTERNAL));
         int nodeProtocolPort = Integer.valueOf(nodeConfig.getProperty(NodeConfig.NODE_PROTOCOL_PORT));
         int containerInitProtocolPort = Integer.valueOf(nodeConfig.getProperty(NodeConfig.CONTAINER_PROTOCOL_INITPORT));
-        NodeContext nodeContext = new NodeContext(HostUtil.localhost(), nodeId, nodeProtocolPort);
+        NodeContext nodeContext = new NodeContext(HostUtils.localhost(), nodeId, nodeProtocolPort);
         int nowContainerAllocateRetry = 0;
         while(!isStopped && !Thread.currentThread().isInterrupted()){
             try {
@@ -190,7 +190,7 @@ public class Node implements NodeMasterProtocol{
                     //更新配置或运行新实例
                     containerMasterProtocol.updateConfig(Collections.singletonList(newConfig));
                 }catch (Exception ex){
-                    ExceptionUtil.log(ex);
+                    ExceptionUtils.log(ex);
                     nowContainerAllocateRetry ++;
                     if(nowContainerAllocateRetry <= containerAllocateRetry){
                         log.info("{} times to retry to allocate a container for app '{}'", nowContainerAllocateRetry, newConfig.getProperty(AppConfig.APPNAME));

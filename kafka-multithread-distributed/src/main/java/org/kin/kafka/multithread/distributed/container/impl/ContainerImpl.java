@@ -6,7 +6,7 @@ import org.kin.kafka.multithread.distributed.node.NodeContext;
 import org.kin.kafka.multithread.protocol.distributed.ContainerMasterProtocol;
 import org.kin.kafka.multithread.protocol.distributed.NodeMasterProtocol;
 import org.kin.kafka.multithread.rpc.factory.RPCFactories;
-import org.kin.kafka.multithread.utils.HostUtil;
+import org.kin.kafka.multithread.utils.HostUtils;
 
 /**
  * Created by huangjianqin on 2017/9/18.
@@ -22,7 +22,7 @@ public class ContainerImpl extends Container {
     public void doStart() {
         //启动RPC接口
         RPCFactories.instance().serviceWithoutRegistry(ContainerMasterProtocol.class, this, containerMasterProtocolPort);
-        RPCFactories.instance().clientWithoutRegistry(NodeMasterProtocol.class, HostUtil.localhost(), nodeMasterProtocolPort);
+        RPCFactories.instance().clientWithoutRegistry(NodeMasterProtocol.class, HostUtils.localhost(), nodeMasterProtocolPort);
 
         while(isStopped){
             //阻塞main线程......
