@@ -15,7 +15,7 @@ import java.util.*;
 /**
  * Created by huangjianqin on 2017/9/12.
  */
-public class AppConfigUtils {
+public class AppConfigUtil {
     public static void fillDefaultConfig(Properties config){
         if(config == null){
             return;
@@ -231,9 +231,9 @@ public class AppConfigUtils {
 
     public static void oneNecessaryCheckAndFill(Properties newConfig){
         //填充默认值
-        AppConfigUtils.fillDefaultConfig(newConfig);
+        AppConfigUtil.fillDefaultConfig(newConfig);
         //检查必要配置
-        AppConfigUtils.checkRequireConfig(newConfig);
+        AppConfigUtil.checkRequireConfig(newConfig);
         //检查配置格式
         checkConfigValueFormat(newConfig);
     }

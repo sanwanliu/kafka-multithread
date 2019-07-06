@@ -10,9 +10,9 @@ import org.kin.kafka.multithread.config.AppConfig;
 import org.kin.kafka.multithread.configcenter.ReConfigable;
 import org.kin.kafka.multithread.domain.ConsumerRecordInfo;
 import org.kin.kafka.multithread.statistics.Statistics;
-import org.kin.kafka.multithread.utils.AppConfigUtils;
-import org.kin.kafka.multithread.utils.ClassUtils;
-import org.kin.kafka.multithread.utils.TPStrUtils;
+import org.kin.kafka.multithread.utils.AppConfigUtil;
+import org.kin.kafka.multithread.utils.ClassUtil;
+import org.kin.kafka.multithread.utils.TPStrUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,9 +55,9 @@ public class OCOTMultiProcessor<K, V>  implements Application{
     public OCOTMultiProcessor(Properties config) {
         this.consumerNum = Integer.valueOf(config.getProperty(AppConfig.OCOT_CONSUMERNUM));
         this.config = config;
-        this.messageHandlerClass = AppConfigUtils.getMessageHandlerClass(config);
-        this.commitStrategyClass = AppConfigUtils.getCommitStrategyClass(config);
-        this.consumerRebalanceListenerClass = AppConfigUtils.getConsumerRebalanceListenerClass(config);
+        this.messageHandlerClass = AppConfigUtil.getMessageHandlerClass(config);
+        this.commitStrategyClass = AppConfigUtil.getCommitStrategyClass(config);
+        this.consumerRebalanceListenerClass = AppConfigUtil.getConsumerRebalanceListenerClass(config);
         updataConfig(config);
         this.threads = new ThreadPoolExecutor(
                 2,
@@ -76,8 +76,8 @@ public class OCOTMultiProcessor<K, V>  implements Application{
         if(config.getProperty(AppConfig.KAFKA_CONSUMER_SUBSCRIBE).contains("-")){
             throw new IllegalStateException("OCOT doesn't support set messagehandler per topic");
         }
-        this.topics = AppConfigUtils.getSubscribeTopic(config);
-        this.callBackClass = AppConfigUtils.getCallbackClass(config);
+        this.topics = AppConfigUtil.getSubscribeTopic(config);
+        this.callBackClass = AppConfigUtil.getCallbackClass(config);
     }
 
     /**
@@ -134,10 +134,10 @@ public class OCOTMultiProcessor<K, V>  implements Application{
             return new OCOTProcessor(processorId,
                             config,
                             topics,
-                            ClassUtils.instance(messageHandlerClass),
-                            ClassUtils.instance(commitStrategyClass),
+                            ClassUtil.instance(messageHandlerClass),
+                            ClassUtil.instance(commitStrategyClass),
                             consumerRebalanceListenerClass,
-                            callBackClass != null ? ClassUtils.instance(callBackClass) : null);
+                            callBackClass != null ? ClassUtil.instance(callBackClass) : null);
     }
 
     @Override
@@ -154,7 +154,7 @@ public class OCOTMultiProcessor<K, V>  implements Application{
         }
 
         int consumerNum = this.consumerNum;
-        if(AppConfigUtils.isConfigItemChange(consumerNum, newConfig, AppConfig.OCOT_CONSUMERNUM)){
+        if(AppConfigUtil.isConfigItemChange(consumerNum, newConfig, AppConfig.OCOT_CONSUMERNUM)){
             consumerNum = Integer.valueOf(newConfig.getProperty(AppConfig.OCOT_CONSUMERNUM));
             if(consumerNum > 0){
                 if(consumerNum > this.consumerNum){
@@ -235,7 +235,7 @@ public class OCOTMultiProcessor<K, V>  implements Application{
 
             if(topics != null && topics.size() > 0){
                 if(consumerRebalanceListenerClass != null){
-                    this.consumerRebalanceListener = (AbstractConsumerRebalanceListener) ClassUtils.instance(consumerRebalanceListenerClass, this);
+                    this.consumerRebalanceListener = (AbstractConsumerRebalanceListener) ClassUtil.instance(consumerRebalanceListenerClass, this);
                 }
                 else {
                     this.consumerRebalanceListener = null;
@@ -279,7 +279,7 @@ public class OCOTMultiProcessor<K, V>  implements Application{
             }
 
             //设置Kafka consumer某些分区开始消费的Offset
-            AppConfigUtils.setupKafkaStartOffset(this.topicPartitionOffsetStr, this.consumer);
+            AppConfigUtil.setupKafkaStartOffset(this.topicPartitionOffsetStr, this.consumer);
 
             log.info("message processor-" + processorId + " inited");
         }
@@ -319,8 +319,8 @@ public class OCOTMultiProcessor<K, V>  implements Application{
         private void commitSync(Map<TopicPartition, OffsetAndMetadata> offsets){
             log.info("message processor-" + processorId + " commit latest Offsets Sync...");
             consumer.commitSync(offsets);
-            log.info("message processor-" + processorId + " consumer offsets [" + TPStrUtils.topicPartitionOffsetsStr(offsets) + "] committed");
-            Statistics.instance().append("offset", TPStrUtils.topicPartitionOffsetsStr(offsets) + System.lineSeparator());
+            log.info("message processor-" + processorId + " consumer offsets [" + TPStrUtil.topicPartitionOffsetsStr(offsets) + "] committed");
+            Statistics.instance().append("offset", TPStrUtil.topicPartitionOffsetsStr(offsets) + System.lineSeparator());
         }
 
         private Map<TopicPartition, OffsetAndMetadata> getOffsets(){
@@ -432,7 +432,7 @@ public class OCOTMultiProcessor<K, V>  implements Application{
 
         @Override
         public void reConfig(Properties newConfig) {
-            if(AppConfigUtils.isConfigItemChange(config, newConfig, AppConfig.MESSAGEFETCHER_POLL_TIMEOUT)){
+            if(AppConfigUtil.isConfigItemChange(config, newConfig, AppConfig.MESSAGEFETCHER_POLL_TIMEOUT)){
                 pollTimeout = Long.valueOf(newConfig.get(AppConfig.MESSAGEFETCHER_POLL_TIMEOUT).toString());
             }
 

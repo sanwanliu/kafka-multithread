@@ -2,7 +2,7 @@ package org.kin.kafka.multithread.rpc.factory.impl;
 
 import com.alibaba.dubbo.config.*;
 import org.kin.kafka.multithread.rpc.factory.RPCFactory;
-import org.kin.kafka.multithread.utils.HostUtils;
+import org.kin.kafka.multithread.utils.HostUtil;
 
 /**
  * Created by huangjianqin on 2017/9/8.
@@ -18,7 +18,7 @@ public class DefaultRPCFactoryImpl implements RPCFactory {
     @Override
     public void service(Class service, Object serviceImpl, String registryAddress, String protocolName, int protocolPort){
         ApplicationConfig applicationConfig = new ApplicationConfig();
-        applicationConfig.setName(service.getSimpleName() + "-" + HostUtils.localhost());
+        applicationConfig.setName(service.getSimpleName() + "-" + HostUtil.localhost());
 
         RegistryConfig registryConfig = new RegistryConfig();
         registryConfig.setAddress(registryAddress);

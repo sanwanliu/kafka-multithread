@@ -1,7 +1,7 @@
 package org.kin.kafka.multithread.configcenter;
 
 import org.junit.Test;
-import org.kin.kafka.multithread.utils.HostUtils;
+import org.kin.kafka.multithread.utils.HostUtil;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -18,10 +18,10 @@ public class TestDiamondRestClient extends TestConfigBase{
 //    @Test
     public void storeYAMLConfig(){
         String appName = "test";
-        String host = HostUtils.localhost();
+        String host = HostUtil.localhost();
 
         Client restClient = ClientBuilder.newClient();
-        WebTarget target = restClient.target(String.format("http://%s:60000/kafkamultithread/config/post/%s/%s", HostUtils.localhost(), appName, "yaml"));
+        WebTarget target = restClient.target(String.format("http://%s:60000/kafkamultithread/config/post/%s/%s", HostUtil.localhost(), appName, "yaml"));
         Form form = new Form();
         form.param("config", getYAMLConfig(properties));
         form.param("host", host);
@@ -35,11 +35,11 @@ public class TestDiamondRestClient extends TestConfigBase{
     @Test
     public void storeJSONConfig(){
         String appName = "test1";
-        String host = HostUtils.localhost();
+        String host = HostUtil.localhost();
 
         Client restClient = ClientBuilder.newClient();
         System.out.println();
-        WebTarget target = restClient.target(String.format("http://%s:60000/kafkamultithread/config/post/%s/%s", HostUtils.localhost(), appName, "json"));
+        WebTarget target = restClient.target(String.format("http://%s:60000/kafkamultithread/config/post/%s/%s", HostUtil.localhost(), appName, "json"));
         Form form = new Form();
         form.param("config", getJSONConfig(properties));
         form.param("host", host);
@@ -53,10 +53,10 @@ public class TestDiamondRestClient extends TestConfigBase{
 //    @Test
     public void storePropertiesConfig(){
         String appName = "test";
-        String host = HostUtils.localhost();
+        String host = HostUtil.localhost();
 
         Client restClient = ClientBuilder.newClient();
-        WebTarget target = restClient.target(String.format("http://%s:60000/kafkamultithread/config/post/%s/%s", HostUtils.localhost(), appName, "properties"));
+        WebTarget target = restClient.target(String.format("http://%s:60000/kafkamultithread/config/post/%s/%s", HostUtil.localhost(), appName, "properties"));
         Form form = new Form();
         form.param("config", getPropertiesStr(properties));
         form.param("host", host);
@@ -70,11 +70,11 @@ public class TestDiamondRestClient extends TestConfigBase{
 //    @Test
     public void getPropertiesConfig(){
         String appName = "test";
-        String host = HostUtils.localhost();
+        String host = HostUtil.localhost();
         String type = "properties";
 
         Client restClient = ClientBuilder.newClient();
-        WebTarget target = restClient.target(String.format("http://%s:60000/kafkamultithread/config/get/%s/%s", HostUtils.localhost(), appName, type));
+        WebTarget target = restClient.target(String.format("http://%s:60000/kafkamultithread/config/get/%s/%s", HostUtil.localhost(), appName, type));
         Response response = target.queryParam("host", host).request().get();
 
         System.out.println(response.getStatus());
@@ -85,11 +85,11 @@ public class TestDiamondRestClient extends TestConfigBase{
 //    @Test
     public void getJSONConfig(){
         String appName = "test1";
-        String host = HostUtils.localhost();
+        String host = HostUtil.localhost();
         String type = "json";
 
         Client restClient = ClientBuilder.newClient();
-        WebTarget target = restClient.target(String.format("http://%s:60000/kafkamultithread/config/get/%s/%s", HostUtils.localhost(), appName, type));
+        WebTarget target = restClient.target(String.format("http://%s:60000/kafkamultithread/config/get/%s/%s", HostUtil.localhost(), appName, type));
         Response response = target.queryParam("host", host).request().get();
 
         System.out.println(response.getStatus());
@@ -100,11 +100,11 @@ public class TestDiamondRestClient extends TestConfigBase{
 //    @Test
     public void getYAMLConfig(){
         String appName = "test";
-        String host = HostUtils.localhost();
+        String host = HostUtil.localhost();
         String type = "yaml";
 
         Client restClient = ClientBuilder.newClient();
-        WebTarget target = restClient.target(String.format("http://%s:60000/kafkamultithread/config/get/%s/%s", HostUtils.localhost(), appName, type));
+        WebTarget target = restClient.target(String.format("http://%s:60000/kafkamultithread/config/get/%s/%s", HostUtil.localhost(), appName, type));
         Response response = target.queryParam("host", host).request().get();
 
         System.out.println(response.getStatus());

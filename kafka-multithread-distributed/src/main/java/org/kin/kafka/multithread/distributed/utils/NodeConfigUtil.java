@@ -10,7 +10,7 @@ import java.util.Properties;
 /**
  * Created by huangjianqin on 2017/9/20.
  */
-public class NodeConfigUtils {
+public class NodeConfigUtil {
     public static void fillDefaultConfig(Properties config){
         if(config == null){
             return;
@@ -76,7 +76,7 @@ public class NodeConfigUtils {
 
     public static void oneNecessaryCheckAndFill(Properties newConfig){
         //填充默认值
-        NodeConfigUtils.fillDefaultConfig(newConfig);
+        NodeConfigUtil.fillDefaultConfig(newConfig);
         //检查配置格式
         if(!checkConfigValueFormat(newConfig)){
             return;

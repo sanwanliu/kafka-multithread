@@ -3,9 +3,9 @@ package org.kin.kafka.multithread.configcenter.manager.impl;
 import org.kin.kafka.multithread.config.AppConfig;
 import org.kin.kafka.multithread.configcenter.ConfigCenterConfig;
 import org.kin.kafka.multithread.configcenter.manager.AbstractConfigStoreManager;
-import org.kin.kafka.multithread.configcenter.utils.PropertiesUtils;
+import org.kin.kafka.multithread.configcenter.utils.PropertiesUtil;
 import org.kin.kafka.multithread.protocol.app.ApplicationContextInfo;
-import org.kin.kafka.multithread.utils.StringUtils;
+import org.kin.kafka.multithread.utils.StringUtil;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Pipeline;
@@ -187,7 +187,7 @@ public class RedisConfigStoreManager extends AbstractConfigStoreManager{
     @Override
     public Map<String, String> getAppConfigMap(ApplicationContextInfo applicationContextInfo) {
         String key = String.format(KEY_FORMAT, applicationContextInfo.getHost(), applicationContextInfo.getAppName());
-        return PropertiesUtils.properties2Map(getOneAppConfig(key));
+        return PropertiesUtil.properties2Map(getOneAppConfig(key));
     }
 
     @Override
@@ -224,7 +224,7 @@ public class RedisConfigStoreManager extends AbstractConfigStoreManager{
                 }
                 else{
                     //fetch过就不再fetch
-                    String[] hostAndAppName = StringUtils.getHostAndAppName(FLAG_KEY_REGEX, matchedConfigFlag.get(i));
+                    String[] hostAndAppName = StringUtil.getHostAndAppName(FLAG_KEY_REGEX, matchedConfigFlag.get(i));
                     excludeSet.add(String.format(TMP_KEY_FORMAT, hostAndAppName[0], hostAndAppName[1]));
                 }
             }

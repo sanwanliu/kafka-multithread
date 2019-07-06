@@ -8,7 +8,7 @@ import org.kin.kafka.multithread.distributed.node.config.NodeConfig;
 import org.kin.kafka.multithread.domain.HealthReport;
 import org.kin.kafka.multithread.protocol.distributed.ContainerMasterProtocol;
 import org.kin.kafka.multithread.rpc.factory.RPCFactories;
-import org.kin.kafka.multithread.utils.HostUtils;
+import org.kin.kafka.multithread.utils.HostUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,7 +99,7 @@ public class LocalContainerAllocator implements ContainerAllocator {
                     e.printStackTrace();
                 }
                 //构建与cotainer的RPC接口
-                ContainerMasterProtocol containerClient = RPCFactories.instance().clientWithoutRegistry(ContainerMasterProtocol.class, HostUtils.localhost(), containerContext.getProtocolPort());
+                ContainerMasterProtocol containerClient = RPCFactories.instance().clientWithoutRegistry(ContainerMasterProtocol.class, HostUtil.localhost(), containerContext.getProtocolPort());
                 id2Container.put(containerContext.getContainerId(), containerClient);
 
                 selectedContainerClient = containerClient;

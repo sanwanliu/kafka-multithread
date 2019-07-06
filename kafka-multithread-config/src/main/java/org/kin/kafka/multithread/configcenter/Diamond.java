@@ -6,9 +6,9 @@ import org.kin.kafka.multithread.config.AppConfig;
 import org.kin.kafka.multithread.configcenter.codec.StoreCodec;
 import org.kin.kafka.multithread.configcenter.codec.StoreCodecs;
 import org.kin.kafka.multithread.configcenter.manager.ConfigStoreManager;
-import org.kin.kafka.multithread.configcenter.utils.ConfigCenterConfigUtils;
-import org.kin.kafka.multithread.configcenter.utils.PropertiesUtils;
-import org.kin.kafka.multithread.configcenter.utils.YAMLUtils;
+import org.kin.kafka.multithread.configcenter.utils.ConfigCenterConfigUtil;
+import org.kin.kafka.multithread.configcenter.utils.PropertiesUtil;
+import org.kin.kafka.multithread.configcenter.utils.YAMLUtil;
 import org.kin.kafka.multithread.distributed.AppStatus;
 import org.kin.kafka.multithread.domain.ConfigFetcherHeartbeatRequest;
 import org.kin.kafka.multithread.domain.ConfigFetcherHeartbeatResponse;
@@ -16,8 +16,8 @@ import org.kin.kafka.multithread.protocol.app.ApplicationContextInfo;
 import org.kin.kafka.multithread.protocol.configcenter.AdminProtocol;
 import org.kin.kafka.multithread.protocol.configcenter.DiamondMasterProtocol;
 import org.kin.kafka.multithread.rpc.factory.RPCFactories;
-import org.kin.kafka.multithread.utils.ClassUtils;
-import org.kin.kafka.multithread.utils.ExceptionUtils;
+import org.kin.kafka.multithread.utils.ClassUtil;
+import org.kin.kafka.multithread.utils.ExceptionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,15 +50,15 @@ public class Diamond implements DiamondMasterProtocol, AdminProtocol{
     }
 
     public Diamond(String configPath) {
-        config = YAMLUtils.loadYML2Properties(configPath);
-        ConfigCenterConfigUtils.oneNecessaryCheckAndFill(config);
-        log.info("diamond loaded config " + System.lineSeparator() + ConfigCenterConfigUtils.toString(config));
+        config = YAMLUtil.loadYML2Properties(configPath);
+        ConfigCenterConfigUtil.oneNecessaryCheckAndFill(config);
+        log.info("diamond loaded config " + System.lineSeparator() + ConfigCenterConfigUtil.toString(config));
     }
 
     public void init(){
         log.info("diamond initing...");
         String storeManagerClass = (String) config.getOrDefault(ConfigCenterConfig.CONFIG_STOREMANAGER_CLASS, DefaultConfigCenterConfig.DEFAULT_CONFIG_STOREMANAGER_CLASS);
-        configStoreManager = (ConfigStoreManager) ClassUtils.instance(storeManagerClass);
+        configStoreManager = (ConfigStoreManager) ClassUtil.instance(storeManagerClass);
         configStoreManager.setup(config);
 
         //加载所有已写进StoreType的codec
@@ -115,7 +115,7 @@ public class Diamond implements DiamondMasterProtocol, AdminProtocol{
             try {
                 Thread.sleep(60 * 1000);
             } catch (InterruptedException e) {
-                ExceptionUtils.log(e);
+                ExceptionUtil.log(e);
             }
         }
     }
@@ -143,13 +143,13 @@ public class Diamond implements DiamondMasterProtocol, AdminProtocol{
 
         StoreCodec storeCodec = StoreCodecs.getCodecByName(type);
         //保证host与appName一致性
-        Properties configProperties = PropertiesUtils.map2Properties(storeCodec.deSerialize(config));
+        Properties configProperties = PropertiesUtil.map2Properties(storeCodec.deSerialize(config));
         configProperties.put(AppConfig.APPHOST, host);
         configProperties.put(AppConfig.APPNAME, appName);
 
         //如果是更新配置,则只能更新指定配置,其余配置只能固定
         if(AppStatus.getByStatusDesc(configProperties.getProperty(AppConfig.APPSTATUS)).equals(AppStatus.UPDATE)){
-            Properties origin = PropertiesUtils.map2Properties(configStoreManager.getAppConfigMap(new ApplicationContextInfo(appName, host)));
+            Properties origin = PropertiesUtil.map2Properties(configStoreManager.getAppConfigMap(new ApplicationContextInfo(appName, host)));
             for(Object key: origin.keySet()){
                 if(!AppConfig.CAN_RECONFIG_APPCONFIGS.contains(key)){
                     if(origin.containsKey(key)){

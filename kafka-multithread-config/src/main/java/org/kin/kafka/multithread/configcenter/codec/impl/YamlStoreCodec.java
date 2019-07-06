@@ -3,7 +3,7 @@ package org.kin.kafka.multithread.configcenter.codec.impl;
 import org.ho.yaml.Yaml;
 import org.kin.kafka.multithread.config.AppConfig;
 import org.kin.kafka.multithread.configcenter.codec.StoreCodec;
-import org.kin.kafka.multithread.configcenter.utils.YAMLUtils;
+import org.kin.kafka.multithread.configcenter.utils.YAMLUtil;
 
 import java.util.Map;
 
@@ -14,7 +14,7 @@ import java.util.Map;
 public class YamlStoreCodec implements StoreCodec {
     @Override
     public Map<String, String> deSerialize(String source) {
-        return YAMLUtils.transfer2Map((Map<String, Object>) Yaml.load(source));
+        return YAMLUtil.transfer2Map((Map<String, Object>) Yaml.load(source));
     }
 
     @Override
@@ -27,7 +27,7 @@ public class YamlStoreCodec implements StoreCodec {
 
     @Override
     public String serialize(Map<String, String> serialized) {
-        return YAMLUtils.transfer2YamlStr(YAMLUtils.transfer2Yaml(serialized));
+        return YAMLUtil.transfer2YamlStr(YAMLUtil.transfer2Yaml(serialized));
     }
 
     @Override

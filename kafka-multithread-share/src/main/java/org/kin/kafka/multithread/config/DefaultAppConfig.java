@@ -1,7 +1,7 @@
 package org.kin.kafka.multithread.config;
 
 import org.kin.kafka.multithread.distributed.AppStatus;
-import org.kin.kafka.multithread.utils.HostUtils;
+import org.kin.kafka.multithread.utils.HostUtil;
 
 
 /**
@@ -11,7 +11,7 @@ import org.kin.kafka.multithread.utils.HostUtils;
 public class DefaultAppConfig {
     public static final String DEFAULT_NULL = "";
 
-    public static final String DEFAULT_APPHOST = HostUtils.localhost() + "";
+    public static final String DEFAULT_APPHOST = HostUtil.localhost() + "";
     public static final String DEFAULT_APPSTATUS = AppStatus.RUN.getStatusDesc();
 
     public static final String OPOT = "OPOT";

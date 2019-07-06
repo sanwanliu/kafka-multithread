@@ -11,7 +11,7 @@ import java.util.Map;
  * Created by huangjianqin on 2017/6/22.
  * TopicPartition的字符表示工具类
  */
-public class TPStrUtils {
+public class TPStrUtil {
     /**
      * 生成topicX-partitionX,topicX-partitionX,......字符串
      */

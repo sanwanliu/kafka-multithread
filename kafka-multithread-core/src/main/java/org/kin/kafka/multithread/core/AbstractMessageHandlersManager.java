@@ -9,9 +9,9 @@ import org.kin.kafka.multithread.api.CommitStrategy;
 import org.kin.kafka.multithread.api.MessageHandler;
 import org.kin.kafka.multithread.configcenter.ReConfigable;
 import org.kin.kafka.multithread.domain.ConsumerRecordInfo;
-import org.kin.kafka.multithread.utils.AppConfigUtils;
-import org.kin.kafka.multithread.utils.ClassUtils;
-import org.kin.kafka.multithread.utils.ExceptionUtils;
+import org.kin.kafka.multithread.utils.AppConfigUtil;
+import org.kin.kafka.multithread.utils.ClassUtil;
+import org.kin.kafka.multithread.utils.ExceptionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,9 +45,9 @@ public abstract class AbstractMessageHandlersManager implements MessageHandlersM
         topic2HandlerClass = new HashMap<>();
         topic2CommitStrategyClass = new HashMap<>();
 
-        for(String topic: AppConfigUtils.getSubscribeTopic(config)){
-            topic2HandlerClass.put(topic, AppConfigUtils.getMessageHandlerClass(config));
-            topic2CommitStrategyClass.put(topic, AppConfigUtils.getCommitStrategyClass(config));
+        for(String topic: AppConfigUtil.getSubscribeTopic(config)){
+            topic2HandlerClass.put(topic, AppConfigUtil.getMessageHandlerClass(config));
+            topic2CommitStrategyClass.put(topic, AppConfigUtil.getCommitStrategyClass(config));
         }
 
         isAutoCommit = Boolean.valueOf(config.getProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG));
@@ -74,15 +74,15 @@ public abstract class AbstractMessageHandlersManager implements MessageHandlersM
         Class<? extends MessageHandler> claxx = topic2HandlerClass.get(topic);
         if(claxx != null){
             try {
-                MessageHandler messageHandler = ClassUtils.instance(claxx);
+                MessageHandler messageHandler = ClassUtil.instance(claxx);
                 //初始化message handler
                 messageHandler.setup(config);
 
                 return messageHandler;
             } catch (IllegalAccessException | InstantiationException e) {
-                ExceptionUtils.log(e);
+                ExceptionUtil.log(e);
             } catch (Exception e) {
-                ExceptionUtils.log(e);
+                ExceptionUtil.log(e);
             }
         }
         throw new IllegalStateException("appliction must set a message handler for one topic");
@@ -95,15 +95,15 @@ public abstract class AbstractMessageHandlersManager implements MessageHandlersM
         Class<? extends CommitStrategy> claxx = topic2CommitStrategyClass.get(topic);
         if(claxx != null){
             try {
-                CommitStrategy commitStrategy = ClassUtils.instance(claxx);
+                CommitStrategy commitStrategy = ClassUtil.instance(claxx);
                 //初始化message handler
                 commitStrategy.setup(config);
 
                 return commitStrategy;
             } catch (IllegalAccessException | InstantiationException e) {
-                ExceptionUtils.log(e);
+                ExceptionUtil.log(e);
             } catch (Exception e) {
-                ExceptionUtils.log(e);
+                ExceptionUtil.log(e);
             }
         }
         throw new IllegalStateException("appliction must set a commit strategy for one topic");

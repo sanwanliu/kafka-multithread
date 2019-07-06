@@ -9,8 +9,8 @@ import org.kin.kafka.multithread.api.MessageHandler;
 import org.kin.kafka.multithread.common.DefaultThreadFactory;
 import org.kin.kafka.multithread.config.AppConfig;
 import org.kin.kafka.multithread.domain.ConsumerRecordInfo;
-import org.kin.kafka.multithread.utils.AppConfigUtils;
-import org.kin.kafka.multithread.utils.TPStrUtils;
+import org.kin.kafka.multithread.utils.AppConfigUtil;
+import org.kin.kafka.multithread.utils.TPStrUtil;
 
 import java.util.*;
 import java.util.concurrent.SynchronousQueue;
@@ -93,7 +93,7 @@ public class OPMT2MessageHandlersManager extends AbstractMessageHandlersManager 
 
     @Override
     public boolean dispatch(ConsumerRecordInfo consumerRecordInfo, Map<TopicPartition, OffsetAndMetadata> pendingOffsets){
-        log.debug("dispatching message: " + TPStrUtils.consumerRecordDetail(consumerRecordInfo.record()));
+        log.debug("dispatching message: " + TPStrUtil.consumerRecordDetail(consumerRecordInfo.record()));
 
         //自动提交的情况下,不会使用pendingwindow,进而没必要启动一条定时线程来检索空的map实例
         if(!isAutoCommit && updatePengdingWindowAtFixRate == null){
@@ -158,7 +158,7 @@ public class OPMT2MessageHandlersManager extends AbstractMessageHandlersManager 
 
         if(selectedThread != null){
             selectedThread.queue().add(consumerRecordInfo);
-            log.debug("message: " + TPStrUtils.consumerRecordDetail(consumerRecordInfo.record()) + "queued(" + selectedThread.queue().size() + " rest)");
+            log.debug("message: " + TPStrUtil.consumerRecordDetail(consumerRecordInfo.record()) + "queued(" + selectedThread.queue().size() + " rest)");
         }
 
         return true;
@@ -274,7 +274,7 @@ public class OPMT2MessageHandlersManager extends AbstractMessageHandlersManager 
         log.info("OPMT2 message handler manager reconfiging...");
         int threadSizePerPartition = this.threadSizePerPartition;
 
-        if(AppConfigUtils.isConfigItemChange(String.valueOf(threadSizePerPartition), newConfig, AppConfig.OPMT2_THREADSIZEPERPARTITION)){
+        if(AppConfigUtil.isConfigItemChange(String.valueOf(threadSizePerPartition), newConfig, AppConfig.OPMT2_THREADSIZEPERPARTITION)){
             threadSizePerPartition = Integer.valueOf(newConfig.getProperty(AppConfig.OPMT2_THREADSIZEPERPARTITION));
             if(threadSizePerPartition > 0){
                 //仅仅是处理资源减少的情况,资源动态增加在dispatch中处理
@@ -310,7 +310,7 @@ public class OPMT2MessageHandlersManager extends AbstractMessageHandlersManager 
         }
 
         //更新pendingwindow的配置
-        if(AppConfigUtils.isConfigItemChange(String.valueOf(slidingWindow), newConfig, AppConfig.PENDINGWINDOW_SLIDINGWINDOW)){
+        if(AppConfigUtil.isConfigItemChange(String.valueOf(slidingWindow), newConfig, AppConfig.PENDINGWINDOW_SLIDINGWINDOW)){
             int slidingWindow = this.slidingWindow;
 
             //不需要同步,因为stop the world(处理线程停止处理消息)

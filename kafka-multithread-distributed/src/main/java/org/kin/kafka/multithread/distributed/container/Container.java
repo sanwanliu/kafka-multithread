@@ -14,7 +14,7 @@ import org.kin.kafka.multithread.domain.HealthReport;
 import org.kin.kafka.multithread.protocol.app.ApplicationContextInfo;
 import org.kin.kafka.multithread.protocol.distributed.ContainerMasterProtocol;
 import org.kin.kafka.multithread.protocol.distributed.NodeMasterProtocol;
-import org.kin.kafka.multithread.utils.ExceptionUtils;
+import org.kin.kafka.multithread.utils.ExceptionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -248,7 +248,7 @@ public abstract class Container implements ContainerMasterProtocol {
                 nodeMasterProtocol.commitConfigResultRequest(new ConfigResultRequest(applicationContextInfo, true, System.currentTimeMillis(), null));
                 return result;
             }catch (Exception e){
-                ExceptionUtils.log(e);
+                ExceptionUtil.log(e);
                 log.warn(appName + " deploy has something wrong, throw " + e.getCause() + " exception and mark '" + e.getMessage() + "' message");
                 nodeMasterProtocol.commitConfigResultRequest(new ConfigResultRequest(applicationContextInfo, false, System.currentTimeMillis(), e));
                 //考虑更新配置失败时,回滚

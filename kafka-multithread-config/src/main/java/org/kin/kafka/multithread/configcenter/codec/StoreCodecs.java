@@ -1,6 +1,6 @@
 package org.kin.kafka.multithread.configcenter.codec;
 
-import org.kin.kafka.multithread.utils.ClassUtils;
+import org.kin.kafka.multithread.utils.ClassUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +37,7 @@ public class StoreCodecs {
             storeTypeDescArr[0] -= 32;
             storeTypeDesc = new String(storeTypeDescArr);
 
-            StoreCodec storeCodec = (StoreCodec) ClassUtils.instance(String.format(storeCodecClasspath, storeTypeDesc));
+            StoreCodec storeCodec = (StoreCodec) ClassUtil.instance(String.format(storeCodecClasspath, storeTypeDesc));
             storeCodecMap.put(storeType, storeCodec);
 
             storeCodecs.add(storeCodec);

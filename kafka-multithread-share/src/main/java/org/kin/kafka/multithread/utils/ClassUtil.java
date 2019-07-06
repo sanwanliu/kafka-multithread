@@ -5,7 +5,7 @@ import java.lang.reflect.Field;
 /**
  * Created by 健勤 on 2017/7/21.
  */
-public class ClassUtils {
+public class ClassUtil {
     /**
      * 通过无参构造器实例化类
      */
@@ -16,9 +16,9 @@ public class ClassUtils {
         try {
             return claxx.newInstance();
         } catch (InstantiationException e) {
-            ExceptionUtils.log(e);
+            ExceptionUtil.log(e);
         } catch (IllegalAccessException e) {
-            ExceptionUtils.log(e);
+            ExceptionUtil.log(e);
         }
         return null;
     }
@@ -31,11 +31,11 @@ public class ClassUtils {
             Class claxx = Class.forName(classStr);
             return claxx.newInstance();
         } catch (ClassNotFoundException e) {
-            ExceptionUtils.log(e);
+            ExceptionUtil.log(e);
         } catch (IllegalAccessException e) {
-            ExceptionUtils.log(e);
+            ExceptionUtil.log(e);
         } catch (InstantiationException e) {
-            ExceptionUtils.log(e);
+            ExceptionUtil.log(e);
         }
         return null;
     }
@@ -66,9 +66,9 @@ public class ClassUtils {
             }
             return target;
         } catch (InstantiationException e) {
-            ExceptionUtils.log(e);
+            ExceptionUtil.log(e);
         } catch (IllegalAccessException e) {
-            ExceptionUtils.log(e);
+            ExceptionUtil.log(e);
         }
         return null;
     }
@@ -80,7 +80,7 @@ public class ClassUtils {
         try {
             return Class.forName(className);
         } catch (ClassNotFoundException e) {
-            ExceptionUtils.log(e);
+            ExceptionUtil.log(e);
         }
         return null;
     }

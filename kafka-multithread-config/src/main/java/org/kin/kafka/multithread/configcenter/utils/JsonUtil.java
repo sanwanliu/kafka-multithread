@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Created by huangjianqin on 2017/9/11.
  */
-public class JsonUtils {
+public class JsonUtil {
     public static Map<String, String> json2Map(JSONObject json){
         Map<String, String> result = new HashMap<>();
         for(Map.Entry<String, Object> entry: json.entrySet()){

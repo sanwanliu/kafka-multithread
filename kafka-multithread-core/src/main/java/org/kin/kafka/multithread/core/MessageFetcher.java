@@ -9,9 +9,9 @@ import org.kin.kafka.multithread.api.CallBack;
 import org.kin.kafka.multithread.config.AppConfig;
 import org.kin.kafka.multithread.domain.ConsumerRecordInfo;
 import org.kin.kafka.multithread.statistics.Statistics;
-import org.kin.kafka.multithread.utils.AppConfigUtils;
-import org.kin.kafka.multithread.utils.ClassUtils;
-import org.kin.kafka.multithread.utils.TPStrUtils;
+import org.kin.kafka.multithread.utils.AppConfigUtil;
+import org.kin.kafka.multithread.utils.ClassUtil;
+import org.kin.kafka.multithread.utils.TPStrUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,15 +86,15 @@ public class MessageFetcher<K, V> extends Thread implements Application {
                 throw new IllegalStateException("init message handler manager error");
         }
 
-        callBackClass = ClassUtils.getClass(config.getProperty(AppConfig.MESSAGEFETCHER_CONSUME_CALLBACK));
+        callBackClass = ClassUtil.getClass(config.getProperty(AppConfig.MESSAGEFETCHER_CONSUME_CALLBACK));
 
         log();
 
         this.consumer = new KafkaConsumer(config);
-        this.consumer.subscribe(AppConfigUtils.getSubscribeTopic(config), new MessageFetcher.InnerConsumerRebalanceListener<>(this));
+        this.consumer.subscribe(AppConfigUtil.getSubscribeTopic(config), new MessageFetcher.InnerConsumerRebalanceListener<>(this));
 
         //设置Kafka consumer某些分区开始消费的Offset
-        AppConfigUtils.setupKafkaStartOffset(this.config.getProperty(AppConfig.KAFKA_OFFSET), this.consumer);
+        AppConfigUtil.setupKafkaStartOffset(this.config.getProperty(AppConfig.KAFKA_OFFSET), this.consumer);
     }
 
     /**
@@ -191,7 +191,7 @@ public class MessageFetcher<K, V> extends Thread implements Application {
                             offset = record.offset();
                         }
                         //按照某种策略提交线程处理
-                        CallBack callBack = callBackClass != null? ClassUtils.instance(callBackClass) : null;
+                        CallBack callBack = callBackClass != null? ClassUtil.instance(callBackClass) : null;
                         if(callBack != null){
                             try {
                                 callBack.setup(config, this);
@@ -239,8 +239,8 @@ public class MessageFetcher<K, V> extends Thread implements Application {
 
         log.info("consumer commit offsets Sync...");
         consumer.commitSync(offsets);
-        Statistics.instance().append("offset", TPStrUtils.topicPartitionOffsetsStr(offsets) + System.lineSeparator());
-        log.info("consumer offsets [" + TPStrUtils.topicPartitionOffsetsStr(offsets) + "] committed");
+        Statistics.instance().append("offset", TPStrUtil.topicPartitionOffsetsStr(offsets) + System.lineSeparator());
+        log.info("consumer offsets [" + TPStrUtil.topicPartitionOffsetsStr(offsets) + "] committed");
     }
 
     private void commitOffsetsAsync(final Map<TopicPartition, OffsetAndMetadata> offsets){
@@ -274,7 +274,7 @@ public class MessageFetcher<K, V> extends Thread implements Application {
                 } else {
                     //成功,打日志
                     nowRetry = 0;
-                    log.info("consumer offsets [" + TPStrUtils.topicPartitionOffsetsStr(offsets) + "] committed");
+                    log.info("consumer offsets [" + TPStrUtil.topicPartitionOffsetsStr(offsets) + "] committed");
                 }
             }
         });
@@ -329,7 +329,7 @@ public class MessageFetcher<K, V> extends Thread implements Application {
     }
 
     private void doUpdateConfig(Properties newConfig){
-        if(AppConfigUtils.isConfigItemChange(config, newConfig, AppConfig.MESSAGEFETCHER_POLL_TIMEOUT)){
+        if(AppConfigUtil.isConfigItemChange(config, newConfig, AppConfig.MESSAGEFETCHER_POLL_TIMEOUT)){
             long pollTimeout = this.pollTimeout;
             this.pollTimeout = Long.valueOf(newConfig.getProperty(AppConfig.MESSAGEFETCHER_POLL_TIMEOUT));
 
@@ -340,7 +340,7 @@ public class MessageFetcher<K, V> extends Thread implements Application {
             log.info("config '" + AppConfig.MESSAGEFETCHER_POLL_TIMEOUT + "' change from '" + pollTimeout + "' to '" + this.pollTimeout + "'");
         }
 
-        if(AppConfigUtils.isConfigItemChange(config, newConfig, AppConfig.MESSAGEFETCHER_COMMIT_MAXRETRY)){
+        if(AppConfigUtil.isConfigItemChange(config, newConfig, AppConfig.MESSAGEFETCHER_COMMIT_MAXRETRY)){
             int maxRetry = this.maxRetry;
             this.maxRetry = Integer.valueOf(newConfig.getProperty(AppConfig.MESSAGEFETCHER_COMMIT_MAXRETRY));
 
@@ -424,7 +424,7 @@ public class MessageFetcher<K, V> extends Thread implements Application {
 
             //缓存当前Consumer poll到的Offset
             if(collection.size() > 0){
-                log.info("consumer origin assignment: " + TPStrUtils.topicPartitionsStr(collection));
+                log.info("consumer origin assignment: " + TPStrUtil.topicPartitionsStr(collection));
                 log.info("consumer rebalancing...");
                 //保存在jvm内存中
                 for(TopicPartition topicPartition: (Collection<TopicPartition>)collection){
@@ -456,7 +456,7 @@ public class MessageFetcher<K, V> extends Thread implements Application {
                     }
                 }
                 log.info("consumer reassigned");
-                log.info("consumer new assignment: " + TPStrUtils.topicPartitionsStr(collection));
+                log.info("consumer new assignment: " + TPStrUtil.topicPartitionsStr(collection));
                 //清理offset缓存
                 topicPartition2Offset.clear();
             }

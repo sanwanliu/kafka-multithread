@@ -2,7 +2,7 @@ package org.kin.kafka.multithread.configcenter.codec.impl;
 
 import org.kin.kafka.multithread.config.AppConfig;
 import org.kin.kafka.multithread.configcenter.codec.StoreCodec;
-import org.kin.kafka.multithread.configcenter.utils.PropertiesUtils;
+import org.kin.kafka.multithread.configcenter.utils.PropertiesUtil;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -20,7 +20,7 @@ public class PropertiesStoreCodec implements StoreCodec {
         try {
             try(StringReader reader = new StringReader(source)){
                 properties.load(reader);
-                return PropertiesUtils.properties2Map(properties);
+                return PropertiesUtil.properties2Map(properties);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -38,7 +38,7 @@ public class PropertiesStoreCodec implements StoreCodec {
 
     @Override
     public String serialize(Map<String, String> serialized) {
-        Properties properties = PropertiesUtils.map2Properties(serialized);
+        Properties properties = PropertiesUtil.map2Properties(serialized);
         try {
             try(StringWriter writer = new StringWriter()){
                 properties.store(writer, "");

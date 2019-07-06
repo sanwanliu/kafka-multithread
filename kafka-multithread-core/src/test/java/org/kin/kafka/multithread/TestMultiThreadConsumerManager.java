@@ -10,7 +10,7 @@ import org.kin.kafka.multithread.config.DefaultAppConfig;
 import org.kin.kafka.multithread.domain.ApplicationContext;
 import org.kin.kafka.multithread.statistics.Counters;
 import org.kin.kafka.multithread.statistics.Statistics;
-import org.kin.kafka.multithread.utils.AppConfigUtils;
+import org.kin.kafka.multithread.utils.AppConfigUtil;
 
 import java.util.Properties;
 
@@ -52,7 +52,7 @@ public class TestMultiThreadConsumerManager {
             temp = Counters.getCounters().get("consumer-counter");
         }
         //测试更新配置
-        Properties newConfig = AppConfigUtils.deepCopy(config);
+        Properties newConfig = AppConfigUtil.deepCopy(config);
         //改messagefetcher配置
 //        newConfig.setProperty(AppConfig.MESSAGEFETCHER_POLL_TIMEOUT, "30000");
         //改pendingwindow的配置

@@ -7,7 +7,7 @@ import java.util.Properties;
 /**
  * Created by huangjianqin on 2017/9/11.
  */
-public class PropertiesUtils {
+public class PropertiesUtil {
     public static Map<String, String> properties2Map(Properties properties){
         Map<String, String> result = new HashMap<>();
         for(Object key: properties.keySet()){

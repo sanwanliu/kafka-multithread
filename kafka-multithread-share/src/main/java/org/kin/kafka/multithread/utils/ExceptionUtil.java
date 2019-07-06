@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by huangjianqin on 2017/10/28.
  */
-public class ExceptionUtils {
+public class ExceptionUtil {
     private static Logger log = LoggerFactory.getLogger("error");
 
     public static void log(Throwable throwable){

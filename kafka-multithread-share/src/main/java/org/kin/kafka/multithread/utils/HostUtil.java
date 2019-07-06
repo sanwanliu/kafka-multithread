@@ -6,12 +6,12 @@ import java.net.UnknownHostException;
 /**
  * Created by huangjianqin on 2017/9/19.
  */
-public class HostUtils {
+public class HostUtil {
     public static String localhost(){
         try {
             return InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException e) {
-            ExceptionUtils.log(e);
+            ExceptionUtil.log(e);
         }
         return "127.0.0.1";
     }

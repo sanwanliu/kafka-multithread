@@ -10,7 +10,7 @@ import java.util.Properties;
 /**
  * Created by huangjianqin on 2017/9/12.
  */
-public class ConfigCenterConfigUtils {
+public class ConfigCenterConfigUtil {
     public static void fillDefaultConfig(Properties config){
         if(config == null){
             return;
@@ -81,7 +81,7 @@ public class ConfigCenterConfigUtils {
 
     public static void oneNecessaryCheckAndFill(Properties newConfig){
         //填充默认值
-        ConfigCenterConfigUtils.fillDefaultConfig(newConfig);
+        ConfigCenterConfigUtil.fillDefaultConfig(newConfig);
         //检查配置格式
         if(!checkConfigValueFormat(newConfig)){
             return;

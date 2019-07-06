@@ -11,7 +11,7 @@ import java.util.Properties;
 /**
  * Created by huangjianqin on 2017/9/11.
  */
-public class YAMLUtils {
+public class YAMLUtil {
     /**
      * 多层嵌套map
      */
