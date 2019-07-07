@@ -23,59 +23,59 @@
         <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
-            <version>2.8.1</version>
+            <version>${jedis.version}</version>
         </dependency>
 
         <!-- dubbox-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>dubbox</artifactId>
-            <version>2.8.4</version>
+            <version>${dubbox.version}</version>
         </dependency>
 
         <!-- dubbox依赖包-->
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>javax.ws.rs-api</artifactId>
-            <version>2.0.1</version>
+            <version>${javax.ws.rs-api.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.javassist</groupId>
             <artifactId>javassist</artifactId>
-            <version>3.18.1-GA</version>
+            <version>${javassist.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jaxrs</artifactId>
-            <version>3.0.7.Final</version>
+            <version>${resteasy.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-client</artifactId>
-            <version>3.0.7.Final</version>
+            <version>${resteasy.version}</version>
         </dependency>
 
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
-            <version>1.0.0.GA</version>
+            <version>${validation-api.version}</version>
         </dependency>
 
         <!-- 如果要使用netty server -->
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-netty</artifactId>
-            <version>3.0.7.Final</version>
+            <version>${resteasy.version}</version>
         </dependency>
 
         <!-- 添加共享模块-->
         <dependency>
             <groupId>org.kin</groupId>
             <artifactId>kafka-multithread-share</artifactId>
-            <version>0.1.0.0</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

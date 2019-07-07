@@ -14,6 +14,19 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <junit.version>4.4</junit.version>
+        <kin-framework.version>0.1.0.0</kin-framework.version>
+        <jedis.version>2.8.1</jedis.version>
+        <dubbox.version>2.8.4</dubbox.version>
+        <javax.ws.rs-api.version>2.0.1</javax.ws.rs-api.version>
+        <javassist.version>3.18.1-GA</javassist.version>
+        <resteasy.version>3.0.7.Final</resteasy.version>
+        <validation-api.version>1.0.0.GA</validation-api.version>
+        <kafka.version>0.10.0.1</kafka.version>
+        <zookeeper.version>3.4.9</zookeeper.version>
+        <jyaml.version>1.3</jyaml.version>
+        <fastjson.version>1.2.31</fastjson.version>
     </properties>
 
     <modules>
@@ -23,6 +36,16 @@
         <module>Kafka-Multithread-Distributed</module>
         <module>Kafka-Multithread-Share</module>
     </modules>
+
+    <dependencies>
+        <!-- 测试包-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <sourceDirectory>${basedir}/src/main/java</sourceDirectory>

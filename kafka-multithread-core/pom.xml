@@ -16,17 +16,13 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kafka.version>0.10.0.1</kafka.version>
-        <zookeeper.version>3.4.9</zookeeper.version>
     </properties>
 
     <dependencies>
-        <!-- 测试包-->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.4</version>
-            <scope>test</scope>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-reflect</artifactId>
+            <version>2.13.0-M2</version>
         </dependency>
 
         <!-- kafka-->
@@ -53,19 +49,14 @@
         <dependency>
             <groupId>org.kin</groupId>
             <artifactId>kafka-multithread-protocol</artifactId>
-            <version>0.1.0.0</version>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- 添加共享模块-->
         <dependency>
             <groupId>org.kin</groupId>
             <artifactId>kafka-multithread-share</artifactId>
-            <version>0.1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scala-reflect</artifactId>
-            <version>2.13.0-M2</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>
