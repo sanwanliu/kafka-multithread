@@ -1,8 +1,6 @@
 package org.kin.kafka.multithread.distributed.container;
 
-import org.apache.log4j.Level;
 import org.kin.framework.concurrent.PartitionTaskExecutor;
-import org.kin.framework.log.Log4jLoggerBinder;
 import org.kin.kafka.multithread.api.Application;
 import org.kin.kafka.multithread.api.MultiThreadConsumerManager;
 import org.kin.kafka.multithread.config.AppConfig;
@@ -29,8 +27,7 @@ import java.util.concurrent.*;
  * Application容器,多JVM运行,充分利用同一节点的计算和存储资源
  */
 public abstract class Container implements ContainerMasterProtocol {
-    static {log();}
-    protected final Logger log = LoggerFactory.getLogger("Container");
+    protected final Logger log = LoggerFactory.getLogger(Container.class);
 
     private NodeContext nodeContext;
     protected long containerId;
@@ -64,28 +61,6 @@ public abstract class Container implements ContainerMasterProtocol {
         this.containerMasterProtocolPort = containerContext.getProtocolPort();
         this.nodeMasterProtocolPort = nodeContext.getProtocolPort();
         this.reportInternal = containerContext.getReportInternal();
-
-        log();
-    }
-
-    /**
-     * 如果没有适合的logger使用api创建默认logger
-     */
-    private static void log(){
-        String logger = "Container";
-        if(!Log4jLoggerBinder.exist(logger)){
-            String appender = "container";
-            Log4jLoggerBinder.create()
-                    .setLogger(Level.INFO, logger, appender)
-                    .setDailyRollingFileAppender(appender)
-                    .setFile(appender, "/tmp/kafka-multithread/distributed/container${containerId}.log")
-                    .setDatePattern(appender)
-                    .setAppend(appender, true)
-                    .setThreshold(appender, Level.INFO)
-                    .setPatternLayout(appender)
-                    .setConversionPattern(appender)
-                    .bind();
-        }
     }
 
     public abstract void doStart();

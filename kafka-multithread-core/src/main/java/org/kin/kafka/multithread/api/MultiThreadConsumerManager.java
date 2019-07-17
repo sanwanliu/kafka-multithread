@@ -1,8 +1,5 @@
 package org.kin.kafka.multithread.api;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.LogManager;
-import org.kin.framework.log.Log4jLoggerBinder;
 import org.kin.kafka.multithread.config.AppConfig;
 import org.kin.kafka.multithread.configcenter.ReConfigable;
 import org.kin.kafka.multithread.core.AbstractMessageHandlersManager;
@@ -14,7 +11,6 @@ import org.kin.kafka.multithread.utils.AppConfigUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -32,8 +28,7 @@ import java.util.Properties;
  * 消息处理时间越短,OPOT多实例模式会更有优势.
  */
 public class MultiThreadConsumerManager implements ReConfigable{
-    static {log();}
-    private static final Logger log = LoggerFactory.getLogger("MultiThreadConsumerManager");
+    private static final Logger log = LoggerFactory.getLogger(MultiThreadConsumerManager.class);
 
     private static final MultiThreadConsumerManager manager = new MultiThreadConsumerManager();
     private static final Map<String, ApplicationContext> appName2ApplicationContext = new HashMap();
@@ -53,62 +48,6 @@ public class MultiThreadConsumerManager implements ReConfigable{
 
     private MultiThreadConsumerManager() {
 
-    }
-
-    /**
-     * 如果没有适合的logger使用api创建默认logger
-     */
-    private static void log(){
-        Enumeration<org.apache.log4j.Logger> loggerEnumeration = LogManager.getCurrentLoggers();
-        while(loggerEnumeration.hasMoreElements()){
-            System.out.println(loggerEnumeration.nextElement().getName());
-        }
-
-
-        String managerLogger = "MultiThreadConsumerManager";
-        if(!Log4jLoggerBinder.exist(managerLogger)){
-            String appender = "multithreadconsumermanager";
-            Log4jLoggerBinder.create()
-                    .setLogger(Level.INFO, managerLogger, appender)
-                    .setDailyRollingFileAppender(appender)
-                    .setFile(appender, "/tmp/kafka-multithread/core/multithreadconsumermanager.log")
-                    .setDatePattern(appender)
-                    .setAppend(appender, true)
-                    .setThreshold(appender, Level.INFO)
-                    .setPatternLayout(appender)
-                    .setConversionPattern(appender)
-                    .bind();
-        }
-
-        String zookeeperLogger = "org.apache.zookeeper";
-        if(!Log4jLoggerBinder.exist(zookeeperLogger)){
-            String appender = "zookeeper";
-            Log4jLoggerBinder.create()
-                    .setLogger(Level.INFO, zookeeperLogger, appender)
-                    .setDailyRollingFileAppender(appender)
-                    .setFile(appender, "/tmp/kafka-multithread/zookeeper.log")
-                    .setDatePattern(appender)
-                    .setAppend(appender, true)
-                    .setThreshold(appender, Level.INFO)
-                    .setPatternLayout(appender)
-                    .setConversionPattern(appender)
-                    .bind();
-        }
-
-        String kafkaLogger = "org.apache.kafka";
-        if(!Log4jLoggerBinder.exist(kafkaLogger)){
-            String appender = "kafka";
-            Log4jLoggerBinder.create()
-                    .setLogger(Level.INFO, kafkaLogger, appender)
-                    .setDailyRollingFileAppender(appender)
-                    .setFile(appender, "/tmp/kafka-multithread/kafka.log")
-                    .setDatePattern(appender)
-                    .setAppend(appender, true)
-                    .setThreshold(appender, Level.INFO)
-                    .setPatternLayout(appender)
-                    .setConversionPattern(appender)
-                    .bind();
-        }
     }
 
     private void checkAppName(String appName){

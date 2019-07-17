@@ -2,8 +2,6 @@ package org.kin.kafka.multithread.core;
 
 import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.TopicPartition;
-import org.apache.log4j.Level;
-import org.kin.framework.log.Log4jLoggerBinder;
 import org.kin.kafka.multithread.api.*;
 import org.kin.kafka.multithread.common.DefaultThreadFactory;
 import org.kin.kafka.multithread.config.AppConfig;
@@ -33,8 +31,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * 缺点:多个消费者占用资源会更多,单线程处理消费者分配的分区消息,速度会较慢
  */
 public class OCOTMultiProcessor<K, V>  implements Application{
-    static {log();}
-    private static final Logger log = LoggerFactory.getLogger("OCOT");
+    private static final Logger log = LoggerFactory.getLogger(OCOTMultiProcessor.class);
     private int consumerNum;
     private Properties config;
     private Set<String> topics;
@@ -68,8 +65,6 @@ public class OCOTMultiProcessor<K, V>  implements Application{
                 new DefaultThreadFactory(config.getProperty(AppConfig.APPNAME), "OCOTProcessor")
         );
         isAutoCommit = Boolean.valueOf(config.getProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG));
-
-        log();
     }
 
     private void updataConfig(Properties config){
@@ -78,26 +73,6 @@ public class OCOTMultiProcessor<K, V>  implements Application{
         }
         this.topics = AppConfigUtils.getSubscribeTopic(config);
         this.callBackClass = AppConfigUtils.getCallbackClass(config);
-    }
-
-    /**
-     * 如果没有适合的logger使用api创建默认logger
-     */
-    private static void log(){
-        String logger = "OCOT";
-        if(!Log4jLoggerBinder.exist(logger)){
-            String appender = "ocot";
-            Log4jLoggerBinder.create()
-                    .setLogger(Level.INFO, logger, appender)
-                    .setDailyRollingFileAppender(appender)
-                    .setFile(appender, "/tmp/kafka-multithread/core/ocot.log")
-                    .setDatePattern(appender)
-                    .setAppend(appender, true)
-                    .setThreshold(appender, Level.INFO)
-                    .setPatternLayout(appender)
-                    .setConversionPattern(appender)
-                    .bind();
-        }
     }
 
     @Override

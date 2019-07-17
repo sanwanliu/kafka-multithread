@@ -2,8 +2,6 @@ package org.kin.kafka.multithread.rpc.factory;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import org.apache.log4j.Level;
-import org.kin.framework.log.Log4jLoggerBinder;
 import org.kin.kafka.multithread.rpc.factory.impl.DefaultRPCFactoryImpl;
 import org.kin.kafka.multithread.utils.ClassUtils;
 import org.kin.kafka.multithread.utils.ExceptionUtils;
@@ -16,26 +14,6 @@ import java.util.concurrent.ExecutionException;
  * Created by huangjianqin on 2017/9/8.
  */
 public class RPCFactories{
-    static {
-        /**
-         * 如果没有适合的logger使用api创建默认logger
-         */
-        String logger = "com.alibaba.dubbo";
-        if(!Log4jLoggerBinder.exist(logger)){
-            String appender = "dubbo";
-            Log4jLoggerBinder.create()
-                    .setLogger(Level.INFO, logger, appender)
-                    .setDailyRollingFileAppender(appender)
-                    .setFile(appender, "/tmp/kafka-multithread/protocol/dubbo.log")
-                    .setDatePattern(appender)
-                    .setAppend(appender, true)
-                    .setThreshold(appender, Level.INFO)
-                    .setPatternLayout(appender)
-                    .setConversionPattern(appender)
-                    .bind();
-        }
-    }
-
     private static final Logger log = LoggerFactory.getLogger(RPCFactories.class);
     private static final String DEFAULT_RPCFACTORY = DefaultRPCFactoryImpl.class.getName();
     private static Cache<String, RPCFactory> rpcFactories = CacheBuilder.newBuilder().softValues().build();

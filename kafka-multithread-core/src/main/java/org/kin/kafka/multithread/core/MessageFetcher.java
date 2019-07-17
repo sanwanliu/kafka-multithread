@@ -2,8 +2,6 @@ package org.kin.kafka.multithread.core;
 
 import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.TopicPartition;
-import org.apache.log4j.Level;
-import org.kin.framework.log.Log4jLoggerBinder;
 import org.kin.kafka.multithread.api.Application;
 import org.kin.kafka.multithread.api.CallBack;
 import org.kin.kafka.multithread.config.AppConfig;
@@ -25,8 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * 负责抓取信息的线程
  */
 public class MessageFetcher<K, V> extends Thread implements Application {
-    static {log();}
-    private static Logger log = LoggerFactory.getLogger("MessageFetcher");
+    private static Logger log = LoggerFactory.getLogger(MessageFetcher.class);
     private final KafkaConsumer<K, V> consumer;
     //等待提交的Offset
     //用Map的原因是如果同一时间内队列中有相同的topic分区的offset需要提交，那么map会覆盖原有的
@@ -88,33 +85,11 @@ public class MessageFetcher<K, V> extends Thread implements Application {
 
         callBackClass = ClassUtils.getClass(config.getProperty(AppConfig.MESSAGEFETCHER_CONSUME_CALLBACK));
 
-        log();
-
         this.consumer = new KafkaConsumer(config);
         this.consumer.subscribe(AppConfigUtils.getSubscribeTopic(config), new MessageFetcher.InnerConsumerRebalanceListener<>(this));
 
         //设置Kafka consumer某些分区开始消费的Offset
         AppConfigUtils.setupKafkaStartOffset(this.config.getProperty(AppConfig.KAFKA_OFFSET), this.consumer);
-    }
-
-    /**
-     * 如果没有适合的logger使用api创建默认logger
-     */
-    private static void log(){
-        String logger = "MessageFetcher";
-        if(!Log4jLoggerBinder.exist(logger)){
-            String appender = "messagefetcher";
-            Log4jLoggerBinder.create()
-                    .setLogger(Level.INFO, logger, appender)
-                    .setDailyRollingFileAppender(appender)
-                    .setFile(appender, "/tmp/kafka-multithread/core/messagefetcher.log")
-                    .setDatePattern(appender)
-                    .setAppend(appender, true)
-                    .setThreshold(appender, Level.INFO)
-                    .setPatternLayout(appender)
-                    .setConversionPattern(appender)
-                    .bind();
-        }
     }
 
     @Override
@@ -397,7 +372,7 @@ public class MessageFetcher<K, V> extends Thread implements Application {
      * 该监听器的主要目的是释放那些无用资源
      */
     static class InnerConsumerRebalanceListener<K, V> implements ConsumerRebalanceListener {
-        protected static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(InnerConsumerRebalanceListener.class);
+        protected static final Logger log = LoggerFactory.getLogger(InnerConsumerRebalanceListener.class);
         protected final MessageFetcher<K, V> messageFetcher;
         protected Set<TopicPartition> beforeAssignedTopicPartition;
         //jvm内存缓存目前消费到的Offset

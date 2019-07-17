@@ -1,7 +1,5 @@
 package org.kin.kafka.multithread.configcenter;
 
-import org.apache.log4j.Level;
-import org.kin.framework.log.Log4jLoggerBinder;
 import org.kin.kafka.multithread.config.AppConfig;
 import org.kin.kafka.multithread.configcenter.codec.StoreCodec;
 import org.kin.kafka.multithread.configcenter.codec.StoreCodecs;
@@ -39,8 +37,7 @@ import java.util.Properties;
  */
 @Path("kafkamultithread")
 public class Diamond implements DiamondMasterProtocol, AdminProtocol{
-    static {log();}
-    private static final Logger log = LoggerFactory.getLogger("Diamond");
+    private static final Logger log = LoggerFactory.getLogger(Diamond.class);
 
     private ConfigStoreManager configStoreManager;
     private Properties config = new Properties();
@@ -69,26 +66,6 @@ public class Diamond implements DiamondMasterProtocol, AdminProtocol{
         }
 
         log.info("diamond inited");
-    }
-
-    /**
-     * 如果没有适合的logger使用api创建默认logger
-     */
-    private static void log(){
-        String logger = "Diamond";
-        if(!Log4jLoggerBinder.exist(logger)){
-            String appender = "diamond";
-            Log4jLoggerBinder.create()
-                    .setLogger(Level.INFO, logger, appender)
-                    .setDailyRollingFileAppender(appender)
-                    .setFile(appender, "/tmp/kafka-multithread/config/diamond.log")
-                    .setDatePattern(appender)
-                    .setAppend(appender, true)
-                    .setThreshold(appender, Level.INFO)
-                    .setPatternLayout(appender)
-                    .setConversionPattern(appender)
-                    .bind();
-        }
     }
 
     public void start(){

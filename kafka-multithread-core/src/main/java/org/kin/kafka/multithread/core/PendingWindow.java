@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Created by hjq on 2017/7/4.
  */
 public class PendingWindow implements ReConfigable{
-    private static final Logger log = LoggerFactory.getLogger("OPMT");
+    private static final Logger log = LoggerFactory.getLogger(PendingWindow.class);
     private final Map<TopicPartition, OffsetAndMetadata> pendingOffsets;
     private ConcurrentSkipListSet<ConsumerRecordInfo> queue;
     private int slidingWindow;

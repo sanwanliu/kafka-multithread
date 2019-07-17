@@ -2,8 +2,6 @@ package org.kin.kafka.multithread.core;
 
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
-import org.apache.log4j.Level;
-import org.kin.framework.log.Log4jLoggerBinder;
 import org.kin.kafka.multithread.api.CommitStrategy;
 import org.kin.kafka.multithread.api.MessageHandler;
 import org.kin.kafka.multithread.common.DefaultThreadFactory;
@@ -32,7 +30,6 @@ import java.util.concurrent.TimeUnit;
  * 2.改进负载均衡策略
  */
 public class OPMT2MessageHandlersManager extends AbstractMessageHandlersManager {
-    static {log();}
     private Map<TopicPartition, PendingWindow> topicPartition2PendingWindow = new HashMap<>();
     private Map<TopicPartition, List<OPMT2MessageQueueHandlerThread>> topicPartition2Threads = new HashMap<>();
     //所有消息处理线程在同一线程池维护
@@ -61,34 +58,12 @@ public class OPMT2MessageHandlersManager extends AbstractMessageHandlersManager 
 
     public OPMT2MessageHandlersManager() {
         super("OPMT", AppConfig.DEFAULT_APPCONFIG);
-        log();
     }
 
     public OPMT2MessageHandlersManager(Properties config) {
         super("OPMT", config);
         this.threadSizePerPartition = Integer.valueOf(config.getProperty(AppConfig.OPMT2_THREADSIZEPERPARTITION));
         this.slidingWindow = Integer.valueOf(config.getProperty(AppConfig.PENDINGWINDOW_SLIDINGWINDOW));
-        log();
-    }
-
-    /**
-     * 如果没有适合的logger使用api创建默认logger
-     */
-    private static void log(){
-        String logger = "OPMT";
-        if(!Log4jLoggerBinder.exist(logger)){
-            String appender = "opmt";
-            Log4jLoggerBinder.create()
-                    .setLogger(Level.INFO, logger, appender)
-                    .setDailyRollingFileAppender(appender)
-                    .setFile(appender, "/tmp/kafka-multithread/core/opmt.log")
-                    .setDatePattern(appender)
-                    .setAppend(appender, true)
-                    .setThreshold(appender, Level.INFO)
-                    .setPatternLayout(appender)
-                    .setConversionPattern(appender)
-                    .bind();
-        }
     }
 
     @Override

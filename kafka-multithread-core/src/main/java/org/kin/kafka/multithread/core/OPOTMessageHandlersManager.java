@@ -2,8 +2,6 @@ package org.kin.kafka.multithread.core;
 
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
-import org.apache.log4j.Level;
-import org.kin.framework.log.Log4jLoggerBinder;
 import org.kin.kafka.multithread.api.CommitStrategy;
 import org.kin.kafka.multithread.api.MessageHandler;
 import org.kin.kafka.multithread.common.DefaultThreadFactory;
@@ -24,7 +22,6 @@ import java.util.concurrent.TimeUnit;
  * OPOT ==> one partition one Thread
  */
 public class OPOTMessageHandlersManager extends AbstractMessageHandlersManager{
-    static {log();}
     private static final Logger log = LoggerFactory.getLogger(OPOTMessageHandlersManager.class);
     private Map<TopicPartition, OPOTMessageQueueHandlerThread> topicPartition2Thread = new ConcurrentHashMap<>();
     /**
@@ -42,32 +39,10 @@ public class OPOTMessageHandlersManager extends AbstractMessageHandlersManager{
 
     public OPOTMessageHandlersManager() {
         super("OPOT", AppConfig.DEFAULT_APPCONFIG);
-        log();
     }
 
     public OPOTMessageHandlersManager(Properties config) {
         super("OPOT", config);
-        log();
-    }
-
-    /**
-     * 如果没有适合的logger使用api创建默认logger
-     */
-    private static void log(){
-        String logger = "OPOT";
-        if(!Log4jLoggerBinder.exist(logger)){
-            String appender = "opot";
-            Log4jLoggerBinder.create()
-                    .setLogger(Level.INFO, logger, appender)
-                    .setDailyRollingFileAppender(appender)
-                    .setFile(appender, "/tmp/kafka-multithread/core/opot.log")
-                    .setDatePattern(appender)
-                    .setAppend(appender, true)
-                    .setThreshold(appender, Level.INFO)
-                    .setPatternLayout(appender)
-                    .setConversionPattern(appender)
-                    .bind();
-        }
     }
 
     @Override

@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 选择启动新的Container
  */
 public class LocalContainerAllocator implements ContainerAllocator {
-    private static final Logger log = LoggerFactory.getLogger("Node");
+    private static final Logger log = LoggerFactory.getLogger(LocalContainerAllocator.class);
 
     private final Map<Long, ContainerMasterProtocol> id2Container;
     private final Properties nodeConfig;

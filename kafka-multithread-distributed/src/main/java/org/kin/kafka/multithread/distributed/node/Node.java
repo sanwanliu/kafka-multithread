@@ -1,7 +1,5 @@
 package org.kin.kafka.multithread.distributed.node;
 
-import org.apache.log4j.Level;
-import org.kin.framework.log.Log4jLoggerBinder;
 import org.kin.kafka.multithread.config.AppConfig;
 import org.kin.kafka.multithread.distributed.ChildRunModel;
 import org.kin.kafka.multithread.distributed.configcenter.ConfigFetcher;
@@ -38,8 +36,7 @@ import java.util.concurrent.LinkedBlockingDeque;
  * 充当Container资源的分配与关闭
  */
 public class Node implements NodeMasterProtocol{
-    static {log();}
-    private static final Logger log = LoggerFactory.getLogger("Node");
+    private static final Logger log = LoggerFactory.getLogger(Node.class);
 
     private static final Long nodeId = Long.valueOf(HostUtils.localhost().replaceAll("\\.", ""));
     public static final int CONTAINER_NUM_LIMIT = 10;
@@ -62,7 +59,6 @@ public class Node implements NodeMasterProtocol{
     }
 
     public Node(String configPath) {
-        log();
         //加载配置
         this.nodeConfig = new Properties();
         try {
@@ -77,32 +73,11 @@ public class Node implements NodeMasterProtocol{
     }
 
     public Node(Properties nodeConfig) {
-        log();
         this.nodeConfig = nodeConfig;
         log.info("node config loaded");
         //校验配置
         NodeConfigUtils.oneNecessaryCheckAndFill(nodeConfig);
         log.info("config is Safe" + System.lineSeparator() + NodeConfigUtils.toString(nodeConfig));
-    }
-
-    /**
-     * 如果没有适合的logger使用api创建默认logger
-     */
-    private static void log(){
-        String logger = "Node";
-        if(!Log4jLoggerBinder.exist(logger)){
-            String appender = "node";
-            Log4jLoggerBinder.create()
-                    .setLogger(Level.INFO, logger, appender)
-                    .setDailyRollingFileAppender(appender)
-                    .setFile(appender, "/tmp/kafka-multithread/distributed/node.log")
-                    .setDatePattern(appender)
-                    .setAppend(appender, true)
-                    .setThreshold(appender, Level.INFO)
-                    .setPatternLayout(appender)
-                    .setConversionPattern(appender)
-                    .bind();
-        }
     }
 
     public void init(){

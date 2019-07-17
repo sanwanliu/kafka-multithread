@@ -1,7 +1,5 @@
 package org.kin.kafka.multithread.distributed.configcenter;
 
-import org.apache.log4j.Level;
-import org.kin.framework.log.Log4jLoggerBinder;
 import org.kin.kafka.multithread.config.AppConfig;
 import org.kin.kafka.multithread.distributed.AppStatus;
 import org.kin.kafka.multithread.distributed.node.config.DefaultNodeConfig;
@@ -28,8 +26,7 @@ import java.util.concurrent.TimeUnit;
  * 在其他线程对Application进行更新配置
  */
 public class ConfigFetcher extends Thread{
-    static {log();}
-    private static final Logger log = LoggerFactory.getLogger("ConfigFetcher");
+    private static final Logger log = LoggerFactory.getLogger(ConfigFetcher.class);
 
     private boolean isStopped = false;
     //用于防止同时两个配置在生效,导致组件同时配置两个配置而导致最后配置信息不一致,不完整
@@ -47,7 +44,6 @@ public class ConfigFetcher extends Thread{
 
     public ConfigFetcher(LinkedBlockingDeque<Properties> configQueue) {
         super("ConfigFetcher");
-        log();
         //创建与配置中心的RPC接口
         String host = DefaultNodeConfig.DEFAULT_CONFIGCENTER_HOST;
         int port = Integer.valueOf(DefaultNodeConfig.DEFAULT_CONFIGCENTER_PORT);
@@ -59,32 +55,11 @@ public class ConfigFetcher extends Thread{
 
     public ConfigFetcher(String host, int port, LinkedBlockingDeque<Properties> configQueue, int heartbeatInterval) {
         super("ConfigFetcher");
-        log();
         this.heartbeatInterval = heartbeatInterval;
         //创建与配置中心的RPC接口
         this.diamondContext = new DiamondContext(host, port);
         this.configQueue = configQueue;
         log.info("ready to fetch config from config center(" + host + ":" + port + ")");
-    }
-
-    /**
-     * 如果没有适合的logger使用api创建默认logger
-     */
-    private static void log(){
-        String logger = "ConfigFetcher";
-        if(!Log4jLoggerBinder.exist(logger)){
-            String appender = "configfetcher";
-            Log4jLoggerBinder.create()
-                    .setLogger(Level.INFO, logger, appender)
-                    .setDailyRollingFileAppender(appender)
-                    .setFile(appender, "/tmp/kafka-multithread/distributed/configfetcher.log")
-                    .setDatePattern(appender)
-                    .setAppend(appender, true)
-                    .setThreshold(appender, Level.INFO)
-                    .setPatternLayout(appender)
-                    .setConversionPattern(appender)
-                    .bind();
-        }
     }
 
     private void initDiamondClient(DiamondContext diamondContext){
